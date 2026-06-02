@@ -1,0 +1,151 @@
+/* Settings page: palette editor + defaults.
+   Layout uses the shared `.section` / `.masthead` chrome from components.css. */
+
+.sx-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--rule-hair);
+  margin-bottom: var(--space-4);
+}
+.sx-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.sx-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sx-pname {
+  height: 2rem;
+  padding: 0 var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--t-h3);
+  font-weight: 600;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: var(--rule-hair);
+  width: 18rem;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.sx-pname:hover { border-bottom-color: var(--ink-3); }
+.sx-pname:focus { outline: none; border-bottom-color: var(--ink); }
+
+.sx-count {
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+  color: var(--ink-3);
+}
+
+/* Palette table ----------------------------------------------------- */
+
+.sx-table {
+  border-top: var(--rule-ink);
+  border-bottom: var(--rule-ink);
+}
+
+/* Column template: id | swatch | name | hex | LEGO id | part hint | move | move | remove */
+.sx-row,
+.sx-head {
+  display: grid;
+  grid-template-columns:
+    2.5rem
+    1.75rem
+    minmax(10rem, 1.6fr)
+    7rem
+    5rem
+    6rem
+    auto auto auto;
+  column-gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-2) var(--space-2);
+  border-top: var(--rule-hair);
+}
+.sx-row:first-child,
+.sx-head { border-top: 0; }
+
+.sx-head {
+  padding: var(--space-3) var(--space-2);
+  border-bottom: var(--rule-hair);
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+.sx-head > div:nth-child(3),
+.sx-head > div:nth-child(4),
+.sx-head > div:nth-child(5),
+.sx-head > div:nth-child(6) { padding-left: var(--space-2); }
+
+.sx-id {
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums slashed-zero;
+  text-align: right;
+  padding-right: var(--space-1);
+}
+
+/* Native color input chip. */
+.sx-swatch {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: var(--rule-hair);
+  background: transparent;
+  cursor: pointer;
+  display: block;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.sx-swatch::-webkit-color-swatch-wrapper { padding: 0; }
+.sx-swatch::-webkit-color-swatch { border: 0; }
+.sx-swatch::-moz-color-swatch { border: 0; }
+.sx-swatch:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+.sx-actions {
+  display: contents;
+}
+
+/* Add-row at the bottom of the table. */
+.sx-add {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: var(--space-4);
+}
+
+/* Footer crosslinks */
+.sx-foot {
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: var(--rule-ink);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+/* Responsive: collapse the table into stacked rows on narrow screens. */
+@media (max-width: 900px) {
+  .sx-head { display: none; }
+  .sx-row {
+    grid-template-columns: 2.5rem 1.75rem 1fr auto auto auto;
+    grid-template-rows: auto auto;
+    row-gap: var(--space-2);
+    padding: var(--space-3) var(--space-2);
+  }
+  .sx-row > .sx-name-cell { grid-column: 3 / -1; grid-row: 1; }
+  .sx-row > .sx-hex-cell  { grid-column: 3 / 5;  grid-row: 2; }
+  .sx-row > .sx-lid-cell  { grid-column: 5 / 6;  grid-row: 2; }
+  .sx-row > .sx-part-cell { grid-column: 6 / -1; grid-row: 2; }
+  .sx-row > .sx-mv-up     { grid-row: 1; }
+  .sx-row > .sx-mv-down   { grid-row: 1; }
+  .sx-row > .sx-rm        { grid-row: 1; }
+}

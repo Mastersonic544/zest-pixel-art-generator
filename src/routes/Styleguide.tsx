@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./Styleguide.css";
 
 type TypeRow = { token: string; size: string; cls: string; sample: string };
@@ -253,8 +254,10 @@ export default function Styleguide() {
 
         <footer style={{ marginTop: "var(--space-8)", paddingTop: "var(--space-5)", borderTop: "var(--rule-ink)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-            <span className="eyebrow">End of system v0.1</span>
-            <span className="num" style={{ color: "var(--ink-3)", fontSize: "var(--t-body-s)" }}>ZEST · 2026</span>
+            <div className="crosslinks">
+              <Link to="/settings">Settings</Link>
+            </div>
+            <span className="num" style={{ color: "var(--ink-3)", fontSize: "var(--t-body-s)" }}>ZEST &middot; 2026</span>
           </div>
         </footer>
       </div>

@@ -1,0 +1,297 @@
+/* Shared component primitives. Imported globally after global.css.
+   These are the deliberate UI building blocks of the system: buttons,
+   inputs, segmented controls, toggles, and the page masthead. */
+
+/* ------------------------------------------------------------------- */
+/* Page chrome                                                         */
+/* ------------------------------------------------------------------- */
+
+.page {
+  min-height: 100vh;
+  padding: var(--space-7) 0 var(--space-10);
+}
+
+.masthead {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: var(--space-6);
+  padding-bottom: var(--space-5);
+  border-bottom: var(--rule-ink);
+}
+.masthead-title {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: var(--t-display-l);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+}
+.masthead-title-sub {
+  color: var(--ink-3);
+  font-weight: 500;
+}
+.masthead-meta {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: var(--space-4);
+  row-gap: var(--space-1);
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+  color: var(--ink-2);
+}
+.masthead-meta span:nth-child(odd) { color: var(--ink-3); }
+
+.section {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  gap: var(--space-6);
+  padding: var(--space-8) 0 var(--space-7);
+  border-bottom: var(--rule-hair);
+}
+.section:last-of-type { border-bottom: 0; }
+
+.section-num {
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+  color: var(--ink-3);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  position: sticky;
+  top: var(--space-5);
+  align-self: start;
+}
+.section-num strong {
+  display: block;
+  color: var(--ink);
+  font-weight: 500;
+  font-size: var(--t-body);
+  margin-top: var(--space-1);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.section-note {
+  max-width: 56ch;
+  margin-bottom: var(--space-5);
+  font-size: var(--t-body-s);
+  color: var(--ink-2);
+  line-height: var(--lh-body);
+}
+
+/* A persistent warning notice. Hairline-framed, no card. */
+.notice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--warn);
+  border-bottom: 1px solid var(--warn);
+  font-size: var(--t-body-s);
+  color: var(--ink);
+  background: var(--warn-faint);
+  margin-bottom: var(--space-5);
+}
+.notice-tag {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--warn);
+  align-self: start;
+  padding-top: 2px;
+}
+
+/* ------------------------------------------------------------------- */
+/* Buttons                                                             */
+/* ------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: 2.5rem;
+  padding: 0 var(--space-4);
+  font-family: var(--font-sans);
+  font-size: var(--t-body-s);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border: var(--rule-ink);
+  background: transparent;
+  color: var(--ink);
+  border-radius: var(--radius-0);
+  transition: background var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--ink); color: var(--paper); }
+.btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.btn-primary:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn-ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--ink-2);
+}
+.btn-ghost:hover { color: var(--ink); background: var(--paper-2); }
+
+.btn-accent {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+.btn-accent:hover { filter: brightness(0.92); }
+
+.btn-danger {
+  border-color: var(--warn);
+  color: var(--warn);
+}
+.btn-danger:hover { background: var(--warn); color: var(--paper); border-color: var(--warn); }
+
+.btn[disabled],
+.btn-disabled {
+  color: var(--ink-3);
+  border-color: var(--hairline);
+  background: transparent;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn-tiny {
+  height: 1.75rem;
+  padding: 0 var(--space-3);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+}
+
+.btn-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+  line-height: 1;
+}
+
+/* ------------------------------------------------------------------- */
+/* Inputs                                                              */
+/* ------------------------------------------------------------------- */
+
+.input {
+  display: inline-flex;
+  align-items: center;
+  height: 2rem;
+  padding: 0 var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--t-body-s);
+  color: var(--ink);
+  background: var(--surface);
+  border: var(--rule-hair);
+  border-radius: var(--radius-0);
+  width: 100%;
+  transition: border-color var(--dur-fast) var(--ease-out),
+              background var(--dur-fast) var(--ease-out);
+}
+.input:hover { border-color: var(--ink-3); }
+.input:focus { outline: none; border-color: var(--ink); }
+.input:focus-visible { outline: none; box-shadow: var(--focus-ring); border-color: var(--ink); }
+.input.is-invalid { border-color: var(--warn); }
+
+.input-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+.input-uppercase {
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------- */
+/* Segmented control                                                   */
+/* ------------------------------------------------------------------- */
+
+.segmented {
+  display: inline-flex;
+  border: var(--rule-ink);
+}
+.segmented button {
+  height: 2rem;
+  padding: 0 var(--space-4);
+  font-family: var(--font-sans);
+  font-size: var(--t-body-s);
+  font-weight: 500;
+  color: var(--ink-2);
+  background: transparent;
+  border: 0;
+  border-left: var(--rule-hair);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+.segmented button:first-child { border-left: 0; }
+.segmented button:hover { color: var(--ink); background: var(--paper-2); }
+.segmented button.is-active { color: var(--paper); background: var(--ink); }
+.segmented button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+.segmented-mono button {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+/* ------------------------------------------------------------------- */
+/* Field row: label + control + helper                                 */
+/* ------------------------------------------------------------------- */
+
+.field {
+  display: grid;
+  grid-template-columns: 12rem 1fr;
+  align-items: center;
+  column-gap: var(--space-5);
+  padding: var(--space-4) 0;
+  border-top: var(--rule-soft);
+}
+.field:last-child { border-bottom: var(--rule-soft); }
+.field-label {
+  display: grid;
+  gap: var(--space-1);
+}
+.field-label-title {
+  font-size: var(--t-body);
+  color: var(--ink);
+  font-weight: 500;
+}
+.field-label-help {
+  font-size: var(--t-body-s);
+  color: var(--ink-3);
+}
+.field-control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* Inline nav row. Used at the bottom of pages for quick route hop. */
+.crosslinks {
+  display: flex;
+  gap: var(--space-5);
+  padding: var(--space-5) 0;
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+}
+.crosslinks a { border-bottom: var(--rule-hair); color: var(--ink-2); }
+.crosslinks a:hover { color: var(--accent); border-color: var(--accent); }
