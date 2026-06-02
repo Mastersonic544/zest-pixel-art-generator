@@ -1,0 +1,187 @@
+/* MosaicPreview + MosaicStats + ColorLegend.
+   The preview is the loudest thing on the page; the chrome stays out
+   of the way. Hairlines, no shadows, mono numerals. */
+
+/* ------------------------------------------------------------------- */
+/* MosaicPreview                                                       */
+/* ------------------------------------------------------------------- */
+
+.mp {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.mp-frame {
+  display: block;
+  border: var(--rule-ink);
+  background: var(--paper-2);
+  /* The canvas is sized in JS with a square aspect. */
+  width: 100%;
+  height: auto;
+}
+
+.mp-frame canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Meta strip below the canvas: mode label + dimensions, monospace. */
+.mp-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mp-meta strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ------------------------------------------------------------------- */
+/* ColorLegend                                                         */
+/* ------------------------------------------------------------------- */
+
+.cl {
+  border-top: var(--rule-ink);
+  border-bottom: var(--rule-ink);
+}
+.cl-row {
+  display: grid;
+  grid-template-columns: 2.5rem 1.25rem 1fr 4.5rem auto auto;
+  align-items: center;
+  column-gap: var(--space-4);
+  padding: var(--space-2) var(--space-2);
+  border-top: var(--rule-hair);
+  font-size: var(--t-body-s);
+}
+.cl-row:first-child { border-top: 0; }
+
+.cl-id {
+  font-family: var(--font-mono);
+  color: var(--ink-3);
+  text-align: right;
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+.cl-chip {
+  width: 1rem;
+  height: 1rem;
+  border: var(--rule-hair);
+}
+.cl-name {
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cl-hex {
+  font-family: var(--font-mono);
+  color: var(--ink-2);
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.cl-count {
+  font-family: var(--font-mono);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums slashed-zero;
+  text-align: right;
+}
+.cl-flag {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--warn);
+  padding: 2px 6px;
+  border: 1px solid var(--warn);
+  align-self: center;
+}
+.cl-flag-empty { visibility: hidden; }
+
+.cl-compact .cl-row {
+  grid-template-columns: 2rem 1rem 1fr auto;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--t-caption);
+}
+.cl-compact .cl-row > .cl-hex,
+.cl-compact .cl-row > .cl-flag { display: none; }
+
+/* ------------------------------------------------------------------- */
+/* MosaicStats                                                         */
+/* ------------------------------------------------------------------- */
+
+.ms {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.ms-figures {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: var(--rule-ink);
+  border-bottom: var(--rule-ink);
+}
+.ms-figures > div { padding: var(--space-4) var(--space-4); }
+.ms-figures > div + div { border-left: var(--rule-hair); }
+
+.ms-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: var(--space-2);
+}
+.ms-figure {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums slashed-zero;
+  font-size: var(--t-stat-l);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+  color: var(--ink);
+}
+.ms-supp {
+  margin-top: var(--space-2);
+  font-size: var(--t-body-s);
+  color: var(--ink-2);
+}
+
+.ms-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.ms-info > div { padding-right: var(--space-4); }
+.ms-info > div + div { padding-left: var(--space-4); border-left: var(--rule-hair); }
+
+.ms-info-value {
+  font-family: var(--font-sans);
+  font-size: var(--t-body);
+  color: var(--ink);
+  text-transform: capitalize;
+}
+.ms-info-value-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+.ms-breakdown-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+/* Responsive: stack columns on narrow screens. */
+@media (max-width: 720px) {
+  .ms-figures,
+  .ms-info { grid-template-columns: 1fr; }
+  .ms-figures > div + div,
+  .ms-info > div + div { border-left: 0; border-top: var(--rule-hair); padding-left: 0; }
+}

@@ -1,4 +1,11 @@
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  MosaicPreview,
+  MosaicStats,
+  makeSampleProject,
+  type PreviewMode,
+} from "@/components/mosaic";
 import "./Styleguide.css";
 
 type TypeRow = { token: string; size: string; cls: string; sample: string };
@@ -67,6 +74,11 @@ const sampleColors: { id: number; name: string; hex: string; count: number; low?
 ];
 
 export default function Styleguide() {
+  const sample16 = useMemo(() => makeSampleProject({ width: 16, height: 16 }), []);
+  const sample32 = useMemo(() => makeSampleProject({ width: 32, height: 32 }), []);
+  const sample48 = useMemo(() => makeSampleProject({ width: 48, height: 48 }), []);
+  const [demoMode, setDemoMode] = useState<PreviewMode>("bricks");
+
   return (
     <div className="sg-page">
       <div className="container">
@@ -249,6 +261,92 @@ export default function Styleguide() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* 7.0 Mosaic preview */}
+        <section className="sg-section">
+          <div className="sg-section-num">
+            07<strong>Preview</strong>
+          </div>
+          <div>
+            <p className="t-body-s" style={{ maxWidth: "56ch", marginBottom: "var(--space-5)" }}>
+              The reusable mosaic preview, three modes. Same sample data,
+              quantized live through the real CIEDE2000 pipeline against the
+              default palette. Bricks mode is canvas-rendered with a tactile
+              stud so it stays crisp at 16 by 16 and does not blur out at 48
+              by 48.
+            </p>
+
+            <div className="eyebrow" style={{ marginBottom: "var(--space-3)" }}>
+              16 by 16, three modes side by side
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: "var(--space-5)",
+                paddingTop: "var(--space-3)",
+                paddingBottom: "var(--space-3)",
+                borderTop: "var(--rule-hair)",
+                borderBottom: "var(--rule-hair)",
+              }}
+            >
+              <MosaicPreview project={sample16} mode="colored" size={260} />
+              <MosaicPreview project={sample16} mode="bricks" size={260} />
+              <MosaicPreview project={sample16} mode="code" size={260} />
+            </div>
+
+            <div style={{ height: "var(--space-7)" }} />
+
+            <div
+              className="eyebrow"
+              style={{
+                display: "flex",
+                alignItems: "baseline",
+                justifyContent: "space-between",
+                marginBottom: "var(--space-3)",
+              }}
+            >
+              <span>32 by 32, switchable mode</span>
+              <div
+                className="segmented"
+                role="radiogroup"
+                aria-label="Demo preview mode"
+              >
+                {(["colored", "bricks", "code"] as const).map((m) => (
+                  <button
+                    key={m}
+                    className={demoMode === m ? "is-active" : ""}
+                    onClick={() => setDemoMode(m)}
+                    role="radio"
+                    aria-checked={demoMode === m}
+                    style={{ textTransform: "capitalize" }}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.2fr)",
+                gap: "var(--space-6)",
+                alignItems: "start",
+              }}
+            >
+              <MosaicStats project={sample32} />
+              <MosaicPreview project={sample32} mode={demoMode} size={420} />
+            </div>
+
+            <div style={{ height: "var(--space-7)" }} />
+
+            <div className="eyebrow" style={{ marginBottom: "var(--space-3)" }}>
+              48 by 48, density check, bricks
+            </div>
+            <MosaicPreview project={sample48} mode="bricks" size={520} />
           </div>
         </section>
 
