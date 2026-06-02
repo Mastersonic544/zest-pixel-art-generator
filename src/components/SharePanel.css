@@ -1,0 +1,175 @@
+/*
+  SharePanel styles.
+  Inline panel that expands below the Share button on /project/:id.
+  No shadows, no rounded cards. Hairline-framed tonal blocks only.
+*/
+
+.sp {
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-5) 0 var(--space-6);
+  border-top: var(--rule-hair);
+}
+
+/* ------------------------------------------------------------------- */
+/* Honesty notice                                                      */
+/* ------------------------------------------------------------------- */
+
+.sp-notice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--paper-2);
+  border-left: var(--w-thick) solid var(--ink);
+  font-size: var(--t-body-s);
+  color: var(--ink-2);
+  line-height: var(--lh-body);
+}
+
+.sp-notice-tag {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-top: 2px;
+  align-self: start;
+}
+
+.sp-local-warn {
+  font-weight: 600;
+  color: var(--warn);
+}
+
+.sp-local-warn code {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  background: var(--warn-faint);
+  padding: 1px 4px;
+}
+
+/* ------------------------------------------------------------------- */
+/* Generate prompt                                                     */
+/* ------------------------------------------------------------------- */
+
+.sp-generate {
+  display: grid;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.sp-generate-copy {
+  max-width: 54ch;
+  font-size: var(--t-body-s);
+  color: var(--ink-2);
+  line-height: var(--lh-body);
+}
+
+/* ------------------------------------------------------------------- */
+/* Status / error                                                      */
+/* ------------------------------------------------------------------- */
+
+.sp-status {
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+  color: var(--ink-3);
+  margin: 0;
+}
+
+.sp-error {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--warn);
+  border-bottom: 1px solid var(--warn);
+  background: var(--warn-faint);
+  font-size: var(--t-body-s);
+  color: var(--ink);
+}
+
+.sp-error-tag {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--warn);
+}
+
+/* ------------------------------------------------------------------- */
+/* Ready state: URL + QR                                              */
+/* ------------------------------------------------------------------- */
+
+.sp-ready {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.sp-url-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border: var(--rule-ink);
+}
+
+.sp-url-input {
+  /* Override .input border so the row border handles it */
+  border: 0;
+  flex: 1;
+  min-width: 0;
+  background: var(--surface);
+  font-size: var(--t-body-s);
+  height: 2.5rem;
+  padding: 0 var(--space-3);
+  color: var(--ink);
+  cursor: text;
+}
+
+.sp-url-input:focus {
+  outline: none;
+}
+
+.sp-copy-btn {
+  /* Flush against the right edge of the bordered row */
+  border: 0;
+  border-left: var(--rule-ink);
+  height: 2.5rem;
+  padding: 0 var(--space-4);
+  flex-shrink: 0;
+}
+
+.sp-qr-block {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-5);
+}
+
+.sp-qr-frame {
+  flex-shrink: 0;
+  border: var(--rule-ink);
+  line-height: 0;
+  background: var(--paper);
+}
+
+.sp-qr-img {
+  display: block;
+  width: 128px;
+  height: 128px;
+  image-rendering: pixelated;
+}
+
+.sp-qr-actions {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+  padding-top: var(--space-1);
+}
+
+.sp-qr-hint {
+  font-size: var(--t-body-s);
+  color: var(--ink-3);
+  max-width: 32ch;
+  line-height: var(--lh-body);
+}

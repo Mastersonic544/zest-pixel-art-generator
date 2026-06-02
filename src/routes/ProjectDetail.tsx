@@ -1,31 +1,59 @@
 /*
-  ProjectDetail — /project/:id (stub for now; full implementation in a later milestone).
-  Shows the project's mosaic preview and basic info. No Studio or Share yet.
+  ProjectDetail — /project/:id
+  PRD §6.4.
+
+  Sections:
+  - Masthead: project name, canvas / baseplate / dithering meta.
+  - Two-column body: stats panel (left), preview + toolbar (right).
+  - Action bar below preview: Studio button (with shared-project warning),
+    Share button that expands SharePanel inline.
 */
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useProjects } from "@/store/projects";
 import { MosaicPreview, MosaicStats } from "@/components/mosaic";
 import type { PreviewMode } from "@/components/mosaic";
+import SharePanel from "@/components/SharePanel";
+import type { Project } from "@/lib/types";
+import "./ProjectDetail.css";
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const project = useProjects((s) => (id ? s.getProject(id) : undefined));
-  const [mode, setMode] = useState<PreviewMode>("colored");
+  const getProject = useProjects((s) => s.getProject);
+  const saveProject = useProjects((s) => s.saveProject);
 
+  const project = id ? getProject(id) : undefined;
+
+  const [mode, setMode] = useState<PreviewMode>("colored");
+  const [shareOpen, setShareOpen] = useState(false);
+  // Show the shared-project edit warning when Studio is clicked on a shared project.
+  const [showEditWarn, setShowEditWarn] = useState(false);
+
+  const handleShared = useCallback(
+    (updated: Project) => {
+      saveProject(updated);
+    },
+    [saveProject]
+  );
+
+  // ------------------------------------------------------------------ //
+  // Not found                                                           //
+  // ------------------------------------------------------------------ //
   if (!project) {
     return (
       <div className="page">
         <div className="container">
           <header className="masthead">
             <h1 className="masthead-title">Project not found</h1>
+            <div className="masthead-meta">
+              <span>ID</span>
+              <span>{id ?? "unknown"}</span>
+            </div>
           </header>
-          <p style={{ marginTop: "var(--space-6)", color: "var(--ink-2)" }}>
-            No project with id <code>{id}</code> exists in this browser.
-          </p>
-          <div style={{ marginTop: "var(--space-5)" }}>
+          <div className="pd-not-found">
+            <p>No project with that id exists in this browser.</p>
             <Link to="/">Back to dashboard</Link>
           </div>
         </div>
@@ -33,37 +61,46 @@ export default function ProjectDetail() {
     );
   }
 
+  const isShared = Boolean(project.shareId);
+
+  // ------------------------------------------------------------------ //
+  // Main view                                                           //
+  // ------------------------------------------------------------------ //
   return (
     <div className="page">
       <div className="container">
+
+        {/* Masthead */}
         <header className="masthead">
-          <h1 className="masthead-title">
-            {project.name}
-            <span className="masthead-title-sub"> / Project</span>
-          </h1>
+          <div className="pd-masthead-title-group">
+            <Link to="/" className="pd-back">Dashboard</Link>
+            <h1 className="masthead-title">{project.name}</h1>
+          </div>
           <div className="masthead-meta">
             <span>Size</span>
-            <span>{project.width} x {project.height}</span>
+            <span className="num">{project.width} x {project.height}</span>
             <span>Baseplate</span>
             <span style={{ textTransform: "capitalize" }}>{project.baseplate}</span>
             <span>Dithering</span>
             <span>{project.dithered ? "On" : "Off"}</span>
+            <span>Status</span>
+            <span>{isShared ? "Shared" : "Private"}</span>
           </div>
         </header>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "18rem 1fr",
-            gap: "var(--space-7)",
-            alignItems: "start",
-            paddingTop: "var(--space-7)",
-          }}
-        >
-          <MosaicStats project={project} />
+        {/* Body: stats left, preview right */}
+        <div className="pd-body">
 
-          <div style={{ display: "grid", gap: "var(--space-5)" }}>
-            <div style={{ display: "flex", gap: "var(--space-4)", flexWrap: "wrap" }}>
+          {/* Left column: stats */}
+          <aside className="pd-stats-col">
+            <MosaicStats project={project} />
+          </aside>
+
+          {/* Right column: preview + toolbar + actions */}
+          <div className="pd-preview-col">
+
+            {/* Mode toggle toolbar */}
+            <div className="pd-toolbar">
               <div
                 className="segmented"
                 role="radiogroup"
@@ -82,16 +119,89 @@ export default function ProjectDetail() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Preview */}
+            <MosaicPreview project={project} mode={mode} size={480} />
+
+            {/* Action bar */}
+            <div className="pd-actions">
+              {/* Studio */}
+              {showEditWarn ? (
+                <div className="pd-edit-warn">
+                  <div className="notice" style={{ margin: 0 }}>
+                    <span className="notice-tag">Note</span>
+                    <span>
+                      This project is shared. Editing it will update the live
+                      build page immediately. The builder will see your changes
+                      the next time they load the page.
+                    </span>
+                  </div>
+                  <div className="pd-edit-warn-actions">
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => navigate(`/project/${project.id}/studio`)}
+                    >
+                      Edit anyway
+                    </button>
+                    <button
+                      className="btn btn-ghost"
+                      onClick={() => setShowEditWarn(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  className="btn"
+                  onClick={() => {
+                    if (isShared) {
+                      setShowEditWarn(true);
+                      setShareOpen(false);
+                    } else {
+                      navigate(`/project/${project.id}/studio`);
+                    }
+                  }}
+                >
+                  Edit in Studio
+                </button>
+              )}
+
+              {/* Share */}
               <button
-                className="btn btn-ghost btn-tiny"
-                onClick={() => navigate("/project/new")}
+                className={`btn${shareOpen ? " is-active pd-share-btn-active" : ""}`}
+                onClick={() => {
+                  setShareOpen((o) => !o);
+                  setShowEditWarn(false);
+                }}
+                aria-expanded={shareOpen}
               >
-                New project
+                {isShared ? "Share settings" : "Share"}
               </button>
             </div>
-            <MosaicPreview project={project} mode={mode} size={480} />
+
+            {/* Share panel — expands inline below action bar */}
+            {shareOpen && (
+              <SharePanel
+                project={project}
+                onShared={handleShared}
+              />
+            )}
           </div>
         </div>
+
+        {/* Footer crosslinks */}
+        <footer className="pd-foot">
+          <div className="crosslinks">
+            <Link to="/">Dashboard</Link>
+            <Link to="/settings">Settings</Link>
+          </div>
+          <span className="num" style={{ color: "var(--ink-3)", fontSize: "var(--t-body-s)" }}>
+            ZEST &middot; 2026
+          </span>
+        </footer>
+
       </div>
     </div>
   );

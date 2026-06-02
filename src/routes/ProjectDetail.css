@@ -1,0 +1,145 @@
+/*
+  ProjectDetail — /project/:id
+  Two-column layout: stats left, preview right.
+  Action bar + inline SharePanel below preview.
+*/
+
+/* ------------------------------------------------------------------- */
+/* Masthead extras                                                     */
+/* ------------------------------------------------------------------- */
+
+.pd-masthead-title-group {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.pd-back {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-bottom: var(--rule-hair);
+  padding-bottom: 0;
+  align-self: start;
+}
+
+.pd-back:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ------------------------------------------------------------------- */
+/* Body layout                                                         */
+/* ------------------------------------------------------------------- */
+
+.pd-body {
+  display: grid;
+  grid-template-columns: 18rem 1fr;
+  gap: var(--space-8);
+  align-items: start;
+  padding-top: var(--space-7);
+}
+
+.pd-stats-col {
+  position: sticky;
+  top: var(--space-6);
+}
+
+.pd-preview-col {
+  display: grid;
+  gap: var(--space-5);
+}
+
+/* ------------------------------------------------------------------- */
+/* Toolbar                                                             */
+/* ------------------------------------------------------------------- */
+
+.pd-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+/* ------------------------------------------------------------------- */
+/* Action bar                                                          */
+/* ------------------------------------------------------------------- */
+
+.pd-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: var(--rule-hair);
+  flex-wrap: wrap;
+}
+
+/* Active Share button gets an ink fill so it reads as "open" */
+.pd-share-btn-active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ------------------------------------------------------------------- */
+/* Edit warning block                                                  */
+/* ------------------------------------------------------------------- */
+
+.pd-edit-warn {
+  display: grid;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.pd-edit-warn-actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* ------------------------------------------------------------------- */
+/* Not-found state                                                     */
+/* ------------------------------------------------------------------- */
+
+.pd-not-found {
+  padding: var(--space-8) 0;
+  display: grid;
+  gap: var(--space-5);
+}
+
+.pd-not-found p {
+  font-size: var(--t-body);
+  color: var(--ink-2);
+}
+
+/* ------------------------------------------------------------------- */
+/* Footer                                                              */
+/* ------------------------------------------------------------------- */
+
+.pd-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-5);
+  margin-top: var(--space-8);
+  border-top: var(--rule-hair);
+}
+
+/* ------------------------------------------------------------------- */
+/* Responsive                                                          */
+/* ------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .pd-body {
+    grid-template-columns: 1fr;
+  }
+
+  .pd-stats-col {
+    position: static;
+    /* On narrow screens stats appear below the preview for visual flow */
+    order: 2;
+  }
+
+  .pd-preview-col {
+    order: 1;
+  }
+}

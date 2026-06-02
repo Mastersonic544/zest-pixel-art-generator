@@ -1,0 +1,212 @@
+/*
+  BuildPage — /build/:shareId
+  Chromeless public view. No dashboard chrome, no editing affordances.
+  Mosaic is the whole point; everything else gets out of the way.
+*/
+
+/* ------------------------------------------------------------------- */
+/* Shell                                                               */
+/* ------------------------------------------------------------------- */
+
+.bp-shell {
+  min-height: 100vh;
+  padding: var(--space-6) 0 var(--space-10);
+  background: var(--paper);
+}
+
+.bp-container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* ------------------------------------------------------------------- */
+/* Header                                                              */
+/* ------------------------------------------------------------------- */
+
+.bp-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: var(--space-6);
+  padding-bottom: var(--space-5);
+  border-bottom: var(--rule-ink);
+}
+
+.bp-header-title-group {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.bp-unlisted-tag {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.bp-title {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: var(--t-display-l);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  color: var(--ink);
+}
+
+.bp-header-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  padding-bottom: 4px;
+}
+
+.bp-meta-pair {
+  display: flex;
+  gap: var(--space-3);
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+  color: var(--ink-2);
+}
+
+.bp-meta-label {
+  color: var(--ink-3);
+}
+
+/* ------------------------------------------------------------------- */
+/* Body layout                                                         */
+/* ------------------------------------------------------------------- */
+
+.bp-body {
+  display: grid;
+  grid-template-columns: 18rem 1fr;
+  gap: var(--space-8);
+  align-items: start;
+  padding-top: var(--space-7);
+}
+
+.bp-stats-col {
+  position: sticky;
+  top: var(--space-6);
+}
+
+.bp-preview-col {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.bp-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* ------------------------------------------------------------------- */
+/* Play placeholder                                                    */
+/* ------------------------------------------------------------------- */
+
+.bp-play-placeholder {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-5);
+  background: var(--paper-2);
+  border-top: var(--rule-hair);
+  border-bottom: var(--rule-hair);
+}
+
+.bp-play-label {
+  font-family: var(--font-sans);
+  font-size: var(--t-body);
+  font-weight: 600;
+  color: var(--ink-3);
+}
+
+.bp-play-sub {
+  font-size: var(--t-body-s);
+  color: var(--ink-4);
+}
+
+/* ------------------------------------------------------------------- */
+/* Loading / error / missing states                                   */
+/* ------------------------------------------------------------------- */
+
+.bp-loading {
+  padding: var(--space-9) 0;
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+  color: var(--ink-3);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+}
+
+.bp-missing {
+  padding: var(--space-9) 0 var(--space-10);
+  display: grid;
+  gap: var(--space-5);
+  max-width: 48ch;
+}
+
+.bp-missing-headline {
+  font-family: var(--font-sans);
+  font-size: var(--t-h1);
+  font-weight: 800;
+  letter-spacing: var(--ls-h);
+  color: var(--ink);
+}
+
+.bp-missing-sub {
+  font-size: var(--t-body);
+  color: var(--ink-2);
+  line-height: var(--lh-body);
+}
+
+/* ------------------------------------------------------------------- */
+/* Footer                                                              */
+/* ------------------------------------------------------------------- */
+
+.bp-foot {
+  padding-top: var(--space-6);
+  margin-top: var(--space-8);
+  border-top: var(--rule-hair);
+}
+
+.bp-foot-note {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  color: var(--ink-4);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------- */
+/* Responsive                                                          */
+/* ------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .bp-body {
+    grid-template-columns: 1fr;
+  }
+
+  .bp-stats-col {
+    position: static;
+    order: 2;
+  }
+
+  .bp-preview-col {
+    order: 1;
+  }
+
+  .bp-header {
+    grid-template-columns: 1fr;
+  }
+
+  .bp-header-meta {
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
