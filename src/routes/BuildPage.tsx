@@ -1,18 +1,21 @@
 /*
   BuildPage — /build/:shareId
-  PRD §6.5 (public, read-only, unlisted).
+  PRD §6.5 — chromeless, read-only, public (unlisted).
 
-  This is the chromeless builder view. It reads the project from
-  shareStorage (local or KV, whichever is configured). Guided assembly
-  modes are a later milestone; this file establishes the route, the data
-  load, and the three preview toggles so the page is immediately functional.
+  Sections:
+  - Minimal header: project name, unlisted tag, key meta.
+  - Two-column body: stats left, preview + assembly right.
+  - Play button enters guided assembly (GuidedAssembly component).
+    While active, MosaicPreview receives the current step's highlight set.
+  - The 3 mode toggles (Colored / Bricks / Code) are always available.
 */
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { shareStorage } from "@/lib/shareStorage";
 import { MosaicPreview, MosaicStats } from "@/components/mosaic";
 import type { PreviewMode } from "@/components/mosaic";
+import GuidedAssembly from "@/components/assembly/GuidedAssembly";
 import type { Project } from "@/lib/types";
 import "./BuildPage.css";
 
@@ -26,38 +29,42 @@ export default function BuildPage() {
   const { shareId } = useParams<{ shareId: string }>();
   const [load, setLoad] = useState<LoadState>({ status: "loading" });
   const [mode, setMode] = useState<PreviewMode>("colored");
+  const [playing, setPlaying] = useState(false);
+  const [highlightSet, setHighlightSet] = useState<ReadonlySet<number> | undefined>(undefined);
 
   useEffect(() => {
-    if (!shareId) {
-      setLoad({ status: "not-found" });
-      return;
-    }
+    if (!shareId) { setLoad({ status: "not-found" }); return; }
     let cancelled = false;
-    shareStorage
-      .read(shareId)
+    shareStorage.read(shareId)
       .then((project) => {
         if (cancelled) return;
-        if (!project) {
-          setLoad({ status: "not-found" });
-        } else {
-          setLoad({ status: "ready", project });
-        }
+        setLoad(project ? { status: "ready", project } : { status: "not-found" });
       })
       .catch((e) => {
         if (cancelled) return;
-        setLoad({
-          status: "error",
-          message: e instanceof Error ? e.message : "Failed to load project.",
-        });
+        setLoad({ status: "error", message: e instanceof Error ? e.message : "Failed to load." });
       });
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [shareId]);
 
-  // ------------------------------------------------------------------ //
-  // Loading                                                            //
-  // ------------------------------------------------------------------ //
+  const handleHighlight = useCallback((active: ReadonlySet<number>) => {
+    setHighlightSet(active.size > 0 ? active : undefined);
+  }, []);
+
+  const handlePlay = useCallback(() => {
+    setPlaying(true);
+    setHighlightSet(undefined);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setPlaying(false);
+    setHighlightSet(undefined);
+  }, []);
+
+  /* ---------------------------------------------------------------- */
+  /* Shell states                                                      */
+  /* ---------------------------------------------------------------- */
+
   if (load.status === "loading") {
     return (
       <div className="bp-shell">
@@ -68,9 +75,6 @@ export default function BuildPage() {
     );
   }
 
-  // ------------------------------------------------------------------ //
-  // Not found                                                          //
-  // ------------------------------------------------------------------ //
   if (load.status === "not-found") {
     return (
       <div className="bp-shell">
@@ -87,9 +91,6 @@ export default function BuildPage() {
     );
   }
 
-  // ------------------------------------------------------------------ //
-  // Error                                                              //
-  // ------------------------------------------------------------------ //
   if (load.status === "error") {
     return (
       <div className="bp-shell">
@@ -103,16 +104,17 @@ export default function BuildPage() {
     );
   }
 
-  // ------------------------------------------------------------------ //
-  // Ready                                                              //
-  // ------------------------------------------------------------------ //
+  /* ---------------------------------------------------------------- */
+  /* Ready                                                            */
+  /* ---------------------------------------------------------------- */
+
   const { project } = load;
 
   return (
     <div className="bp-shell">
       <div className="bp-container">
 
-        {/* Minimal header: project name + unlisted label */}
+        {/* Header */}
         <header className="bp-header">
           <div className="bp-header-title-group">
             <span className="bp-unlisted-tag">Unlisted build page</span>
@@ -134,13 +136,20 @@ export default function BuildPage() {
           </div>
         </header>
 
-        {/* Body: stats + preview */}
+        {/* Body */}
         <div className="bp-body">
-          <aside className="bp-stats-col">
-            <MosaicStats project={project} />
-          </aside>
 
-          <div className="bp-preview-col">
+          {/* Left: stats — hidden while guided assembly is open to give space */}
+          {!playing && (
+            <aside className="bp-stats-col">
+              <MosaicStats project={project} />
+            </aside>
+          )}
+
+          {/* Right: preview + guided assembly */}
+          <div className={`bp-preview-col${playing ? " bp-preview-col-wide" : ""}`}>
+
+            {/* Mode toggle (always available per PRD §6.5) */}
             <div className="bp-toolbar">
               <div
                 className="segmented"
@@ -160,23 +169,47 @@ export default function BuildPage() {
                   </button>
                 ))}
               </div>
+
+              {/* Play / close button */}
+              {!playing ? (
+                <button
+                  className="btn btn-accent"
+                  onClick={handlePlay}
+                >
+                  Play
+                </button>
+              ) : (
+                <button
+                  className="btn btn-ghost btn-tiny"
+                  onClick={handleClose}
+                >
+                  Exit guided mode
+                </button>
+              )}
             </div>
 
-            <MosaicPreview project={project} mode={mode} size={480} />
+            {/* Preview — receives highlight set during guided assembly */}
+            <MosaicPreview
+              project={project}
+              mode={mode}
+              size={480}
+              {...(highlightSet !== undefined ? { highlightSet } : {})}
+            />
 
-            {/* Guided assembly placeholder (PRD §6.5 — later milestone) */}
-            <div className="bp-play-placeholder">
-              <span className="bp-play-label">Guided assembly</span>
-              <span className="bp-play-sub">
-                Step-by-step build instructions are coming in a later release.
-              </span>
-            </div>
+            {/* Guided assembly panel */}
+            {playing && (
+              <GuidedAssembly
+                project={project}
+                onHighlight={handleHighlight}
+                onClose={handleClose}
+              />
+            )}
           </div>
         </div>
 
         <footer className="bp-foot">
           <span className="bp-foot-note">
-            This is an unlisted page. Anyone with the URL can view it.
+            Unlisted page. Anyone with this URL can view it.
           </span>
         </footer>
 

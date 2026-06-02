@@ -15,12 +15,18 @@ type Props = {
   mode: PreviewMode;
   /** Logical CSS pixel size of the square preview. Default 480. */
   size?: number;
+  /**
+   * Optional set of grid cell indices to highlight (guided assembly).
+   * When provided, cells NOT in the set receive a dimming wash so the
+   * active cells stand out. Pass undefined (default) for no highlight.
+   */
+  highlightSet?: ReadonlySet<number>;
 };
 
 /** Min cell size (in CSS px) at which the code-mode number is drawn. */
 const CODE_NUMBER_MIN_CELL = 11;
 
-export default function MosaicPreview({ project, mode, size = 480 }: Props) {
+export default function MosaicPreview({ project, mode, size = 480, highlightSet }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // Build an id -> Color lookup once.
@@ -44,8 +50,8 @@ export default function MosaicPreview({ project, mode, size = 480 }: Props) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(dpr, dpr);
 
-    drawMosaic(ctx, project, colorById, mode, size);
-  }, [project, mode, size, colorById]);
+    drawMosaic(ctx, project, colorById, mode, size, highlightSet);
+  }, [project, mode, size, colorById, highlightSet]);
 
   const cellPx = size / project.width;
 
@@ -81,7 +87,8 @@ function drawMosaic(
   project: MosaicProjectLike,
   colorById: Map<number, Color>,
   mode: PreviewMode,
-  size: number
+  size: number,
+  highlightSet?: ReadonlySet<number>
 ): void {
   const { width: W, height: H, grid } = project;
   const cell = size / W;
@@ -100,7 +107,8 @@ function drawMosaic(
 
   for (let y = 0; y < H; y++) {
     for (let x = 0; x < W; x++) {
-      const id = grid[y * W + x];
+      const cellIdx = y * W + x;
+      const id = grid[cellIdx];
       if (id === undefined) continue;
       const color = colorById.get(id);
       if (!color) continue;
@@ -116,6 +124,11 @@ function drawMosaic(
         case "code":
           drawCode(ctx, px, py, cell, cellH, color.hex, id);
           break;
+      }
+      // Highlight overlay: dim cells not in the active set.
+      if (highlightSet !== undefined && !highlightSet.has(cellIdx)) {
+        ctx.fillStyle = "rgba(244, 242, 236, 0.72)"; // --paper at 72% opacity
+        ctx.fillRect(px, py, cell, cellH);
       }
     }
   }

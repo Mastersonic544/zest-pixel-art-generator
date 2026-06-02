@@ -1,0 +1,327 @@
+/*
+  Guided assembly panel and mini-map.
+  No shadows, no rounded cards. Grid, hairlines, mono numerals.
+*/
+
+/* ------------------------------------------------------------------- */
+/* MiniMap canvas                                                      */
+/* ------------------------------------------------------------------- */
+
+.mm-canvas {
+  display: block;
+  border: var(--rule-ink);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* ------------------------------------------------------------------- */
+/* GuidedAssembly container                                           */
+/* ------------------------------------------------------------------- */
+
+.ga {
+  display: grid;
+  gap: 0;
+  border-top: var(--rule-ink);
+  border-bottom: var(--rule-ink);
+}
+
+/* ------------------------------------------------------------------- */
+/* Top bar: mode selector + exit                                       */
+/* ------------------------------------------------------------------- */
+
+.ga-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: var(--rule-hair);
+}
+
+/* ------------------------------------------------------------------- */
+/* Main row                                                            */
+/* ------------------------------------------------------------------- */
+
+.ga-main {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--space-6);
+  align-items: start;
+  padding: var(--space-5) 0;
+}
+
+/* ------------------------------------------------------------------- */
+/* Mini-map                                                            */
+/* ------------------------------------------------------------------- */
+
+.ga-minimap-wrap {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.ga-minimap-label {
+  display: block;
+}
+
+.ga-minimap-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  color: var(--ink-3);
+  flex-wrap: wrap;
+}
+
+.ga-legend-dot {
+  display: inline-block;
+  width: 0.625rem;
+  height: 0.625rem;
+  border: var(--rule-hair);
+  flex-shrink: 0;
+}
+
+.ga-legend-dot-active {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.ga-legend-dot-done {
+  background: var(--ink-4);
+  border-color: var(--hairline);
+}
+
+.ga-legend-dot-rem {
+  background: var(--paper-2);
+  border-color: var(--hairline);
+}
+
+/* ------------------------------------------------------------------- */
+/* Step detail                                                         */
+/* ------------------------------------------------------------------- */
+
+.ga-detail {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+}
+
+.ga-step-label {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* By-color detail */
+.ga-color-detail {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.ga-color-chip {
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+  border: var(--rule-ink);
+}
+
+.ga-color-text {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.ga-color-name {
+  font-family: var(--font-sans);
+  font-size: var(--t-h3);
+  font-weight: 700;
+  letter-spacing: var(--ls-h);
+  color: var(--ink);
+}
+
+.ga-color-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ga-bag-badge {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border: var(--rule-ink);
+  color: var(--ink);
+  background: var(--paper-2);
+}
+
+.ga-piece-count {
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* By-quarter detail */
+.ga-quarter-detail {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.ga-quarter-name {
+  font-family: var(--font-sans);
+  font-size: var(--t-h3);
+  font-weight: 700;
+  letter-spacing: var(--ls-h);
+  color: var(--ink);
+}
+
+/* 2x2 quadrant diagram */
+.ga-quad-diagram {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.ga-quad-cell {
+  background: var(--paper-2);
+  border: var(--rule-hair);
+}
+
+.ga-quad-cell.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* By-line detail */
+.ga-line-detail {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.ga-line-name {
+  font-family: var(--font-sans);
+  font-size: var(--t-h3);
+  font-weight: 700;
+  letter-spacing: var(--ls-h);
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------------- */
+/* Navigation                                                          */
+/* ------------------------------------------------------------------- */
+
+.ga-nav {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  align-items: center;
+  justify-items: center;
+  gap: var(--space-3);
+  align-content: start;
+  padding-top: var(--space-1);
+}
+
+.ga-nav-btn {
+  width: 5rem;
+}
+
+.ga-step-counter {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+.ga-step-num {
+  font-size: var(--t-stat-m);
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.ga-step-sep {
+  font-size: var(--t-body-s);
+  color: var(--ink-4);
+}
+
+.ga-step-total {
+  font-size: var(--t-body-s);
+  color: var(--ink-3);
+}
+
+/* ------------------------------------------------------------------- */
+/* Progress bar                                                        */
+/* ------------------------------------------------------------------- */
+
+.ga-progress {
+  height: 3px;
+  background: var(--hairline);
+  position: relative;
+  overflow: hidden;
+}
+
+.ga-progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--ink);
+  transition: width var(--dur-base) var(--ease-out);
+}
+
+/* ------------------------------------------------------------------- */
+/* Responsive                                                          */
+/* ------------------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  .ga-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .ga-minimap-wrap {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: var(--space-4);
+    align-items: start;
+  }
+
+  .ga-minimap-label {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .mm-canvas {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .ga-minimap-legend {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-content: start;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ga-nav {
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto;
+    gap: var(--space-3);
+    justify-items: start;
+  }
+
+  .ga-step-counter {
+    justify-self: center;
+  }
+
+  .ga-nav-btn {
+    width: auto;
+  }
+}
