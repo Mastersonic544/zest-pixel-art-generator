@@ -1,0 +1,413 @@
+/*
+  Dashboard styles — /
+  PRD §6.1, §10.
+  No shadows. No rounded cards. Structure through spacing, hairlines,
+  and tonal blocks. Mosaic thumbnail is the loudest thing in each row.
+*/
+
+/* ------------------------------------------------------------------- */
+/* Top nav                                                             */
+/* ------------------------------------------------------------------- */
+
+.db-nav {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+  padding-bottom: 3px; /* align baseline with masthead title */
+}
+
+/* ------------------------------------------------------------------- */
+/* KPI strip                                                           */
+/* ------------------------------------------------------------------- */
+
+.db-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: var(--rule-ink);
+  /* Top rule is the masthead's border-bottom */
+}
+
+.db-kpi {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-5) var(--space-5);
+  border-left: var(--rule-hair);
+}
+
+.db-kpi:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.db-kpi-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+.db-kpi-figure {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums slashed-zero;
+  font-size: var(--t-stat-xl);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+  color: var(--ink);
+  /* Align to a shared baseline across all KPIs */
+  align-self: end;
+  padding-bottom: var(--space-1);
+}
+
+/* Color KPI has a chip + name instead of a pure numeral */
+.db-kpi-figure-color {
+  font-family: var(--font-sans);
+  font-size: var(--t-h2);
+  font-weight: 700;
+  letter-spacing: var(--ls-h);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+}
+
+.db-kpi-figure-empty {
+  color: var(--ink-4);
+  font-size: var(--t-h1);
+}
+
+.db-kpi-chip {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  border: var(--rule-hair);
+}
+
+.db-kpi-supp {
+  font-size: var(--t-body-s);
+  color: var(--ink-3);
+  line-height: var(--lh-body);
+}
+
+.db-kpi-supp-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ------------------------------------------------------------------- */
+/* New project row                                                     */
+/* Deliberate, full-width affordance — not a tiny button in a corner. */
+/* ------------------------------------------------------------------- */
+
+.db-new-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: var(--space-5) 0;
+  border-bottom: var(--rule-ink);
+}
+
+.db-new-copy {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.db-new-label {
+  font-family: var(--font-sans);
+  font-size: var(--t-h3);
+  font-weight: 700;
+  letter-spacing: var(--ls-h);
+  color: var(--ink);
+}
+
+.db-new-sub {
+  font-size: var(--t-body-s);
+  color: var(--ink-3);
+}
+
+.db-new-btn {
+  height: 3rem;
+  padding: 0 var(--space-7);
+  font-size: var(--t-body);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------------- */
+/* Project list                                                        */
+/* ------------------------------------------------------------------- */
+
+.db-list-head {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr 7rem 7rem 6rem;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-3);
+  border-bottom: var(--rule-hair);
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Skip the thumbnail column label (it's the first) — blank header */
+.db-list-head span:first-child {
+  /* no content, but grid space reserved */
+  visibility: hidden;
+}
+
+.db-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.db-list li {
+  border-bottom: var(--rule-hair);
+}
+
+.db-list li:last-child {
+  border-bottom: 0;
+}
+
+.db-row {
+  /* Reset button defaults */
+  width: 100%;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+
+  display: grid;
+  grid-template-columns: 3.5rem 1fr 7rem 7rem 6rem;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-3);
+  transition: background var(--dur-fast) var(--ease-out);
+}
+
+.db-row:hover {
+  background: var(--paper-2);
+}
+
+.db-row:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+/* Thumbnail */
+.db-thumb {
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+  border: var(--rule-hair);
+  overflow: hidden;
+  background: var(--paper-2);
+}
+
+.db-thumb-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.db-thumb-fallback {
+  width: 100%;
+  height: 100%;
+}
+
+/* Name + date column */
+.db-row-name {
+  display: grid;
+  gap: var(--space-1);
+  overflow: hidden;
+}
+
+.db-row-title {
+  font-size: var(--t-body);
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.db-row-date {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Meta columns */
+.db-row-meta {
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+/* Badges */
+.db-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border: 1px solid;
+}
+
+.db-badge-shared {
+  color: var(--ink);
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.db-badge-private {
+  color: var(--ink-4);
+  border-color: var(--hairline);
+}
+
+/* ------------------------------------------------------------------- */
+/* Empty state                                                         */
+/* No emojis. No generic card. Structure through the grid motif.      */
+/* ------------------------------------------------------------------- */
+
+.db-empty {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: var(--space-7);
+  align-items: center;
+  padding: var(--space-9) 0 var(--space-10);
+  border-bottom: var(--rule-hair);
+}
+
+/* A faint 8x8 placeholder grid echoing the mosaic metaphor */
+.db-empty-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 3px;
+  max-width: 18rem;
+  justify-self: end;
+  opacity: 0.18;
+}
+
+.db-empty-cell {
+  aspect-ratio: 1;
+  background: var(--ink);
+}
+
+/* Every other cell slightly lighter to suggest a pattern */
+.db-empty-cell:nth-child(2n) {
+  background: var(--ink-3);
+}
+
+.db-empty-body {
+  display: grid;
+  gap: var(--space-5);
+  align-content: start;
+}
+
+.db-empty-headline {
+  font-family: var(--font-sans);
+  font-size: var(--t-h1);
+  font-weight: 800;
+  letter-spacing: var(--ls-h);
+  color: var(--ink);
+  line-height: var(--lh-h1);
+}
+
+.db-empty-sub {
+  max-width: 44ch;
+  font-size: var(--t-body);
+  color: var(--ink-2);
+  line-height: var(--lh-body);
+}
+
+/* ------------------------------------------------------------------- */
+/* Footer                                                              */
+/* ------------------------------------------------------------------- */
+
+.db-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-5);
+  margin-top: var(--space-7);
+  border-top: var(--rule-hair);
+}
+
+/* ------------------------------------------------------------------- */
+/* Responsive                                                          */
+/* ------------------------------------------------------------------- */
+
+@media (max-width: 960px) {
+  .db-kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .db-kpi:nth-child(2) {
+    border-left: var(--rule-hair);
+  }
+
+  .db-kpi:nth-child(3) {
+    border-left: 0;
+    padding-left: 0;
+    border-top: var(--rule-hair);
+  }
+
+  .db-kpi:nth-child(4) {
+    border-top: var(--rule-hair);
+  }
+}
+
+@media (max-width: 680px) {
+  .db-kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .db-kpi {
+    border-left: 0;
+    padding-left: 0;
+    border-top: var(--rule-hair);
+  }
+
+  .db-kpi:first-child {
+    border-top: 0;
+  }
+
+  .db-list-head,
+  .db-row {
+    grid-template-columns: 3rem 1fr 5rem 5rem;
+  }
+
+  /* Hide the shared status column on very narrow screens */
+  .db-list-head span:last-child,
+  .db-row > span:last-child {
+    display: none;
+  }
+
+  .db-empty {
+    grid-template-columns: 1fr;
+  }
+
+  .db-empty-grid {
+    justify-self: start;
+  }
+}
