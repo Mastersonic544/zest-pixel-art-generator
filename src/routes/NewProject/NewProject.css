@@ -1,0 +1,331 @@
+/* /project/new wizard styles. */
+
+/* ------------------------------------------------------------------- */
+/* Step nav                                                            */
+/* ------------------------------------------------------------------- */
+
+.np-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: var(--rule-ink);
+  border-bottom: var(--rule-ink);
+  margin-top: var(--space-6);
+}
+
+.np-step-tab {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-4);
+  background: transparent;
+  border: 0;
+  border-left: var(--rule-hair);
+  border-right: 0;
+  cursor: default;
+  text-align: left;
+  transition: background var(--dur-fast) var(--ease-out);
+  color: var(--ink-4);
+}
+
+.np-step-tab:first-child {
+  border-left: 0;
+}
+
+.np-step-tab.is-done {
+  cursor: pointer;
+  color: var(--ink-2);
+}
+
+.np-step-tab.is-done:hover {
+  background: var(--paper-2);
+  color: var(--ink);
+}
+
+.np-step-tab.is-active {
+  background: var(--ink);
+  color: var(--paper);
+  cursor: default;
+}
+
+.np-step-tab:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  z-index: 1;
+  position: relative;
+}
+
+.np-step-num {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+}
+
+.np-step-tab.is-active .np-step-num {
+  opacity: 0.7;
+}
+
+.np-step-label {
+  font-size: var(--t-body-s);
+  font-weight: 500;
+}
+
+/* ------------------------------------------------------------------- */
+/* Body wrapper                                                        */
+/* ------------------------------------------------------------------- */
+
+.np-body {
+  padding: var(--space-7) 0 var(--space-8);
+}
+
+.np-step-body {
+  display: grid;
+  gap: var(--space-6);
+}
+
+/* ------------------------------------------------------------------- */
+/* Upload step                                                         */
+/* ------------------------------------------------------------------- */
+
+.np-upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  border: var(--w-thick) dashed var(--hairline);
+  padding: var(--space-10) var(--space-8);
+  cursor: pointer;
+  transition: border-color var(--dur-base) var(--ease-out),
+              background var(--dur-base) var(--ease-out);
+  user-select: none;
+}
+
+.np-upload-zone:hover,
+.np-upload-zone:focus-visible {
+  border-color: var(--ink);
+  background: var(--paper-2);
+  outline: none;
+}
+
+.np-upload-zone.is-dragging {
+  border-color: var(--accent);
+  background: var(--accent-faint);
+}
+
+.np-upload-label {
+  font-family: var(--font-sans);
+  font-size: var(--t-h2);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: var(--ls-h);
+}
+
+.np-upload-sub {
+  font-size: var(--t-body-s);
+  color: var(--ink-3);
+}
+
+/* visually hidden but accessible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------- */
+/* Crop step                                                           */
+/* ------------------------------------------------------------------- */
+
+.np-crop-layout {
+  display: grid;
+  grid-template-columns: 1fr 20rem;
+  gap: var(--space-7);
+  align-items: start;
+}
+
+.np-crop-stage {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.np-crop-canvas {
+  display: block;
+  max-width: 100%;
+}
+
+.np-crop-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.np-dim {
+  position: absolute;
+  background: rgba(10, 10, 8, 0.5);
+  pointer-events: none;
+}
+
+.np-crop-handle {
+  position: absolute;
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+  cursor: grab;
+  pointer-events: auto;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+.np-crop-handle:active {
+  cursor: grabbing;
+}
+
+.np-crop-handle:focus-visible {
+  outline: 2px solid var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+.np-crop-controls {
+  display: grid;
+  gap: var(--space-6);
+  align-content: start;
+  padding-top: var(--space-2);
+}
+
+.np-crop-readout {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+  color: var(--ink-2);
+}
+
+.np-crop-readout-sep {
+  color: var(--ink-4);
+}
+
+/* ------------------------------------------------------------------- */
+/* Convert step                                                        */
+/* ------------------------------------------------------------------- */
+
+.np-convert-layout {
+  display: grid;
+  grid-template-columns: 18rem 1fr;
+  gap: var(--space-7);
+  align-items: start;
+}
+
+.np-convert-stats {
+  padding-top: var(--space-2);
+  border-top: var(--rule-ink);
+}
+
+.np-convert-preview {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.np-convert-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+/* ------------------------------------------------------------------- */
+/* Finish step                                                         */
+/* ------------------------------------------------------------------- */
+
+.np-finish-form {
+  display: grid;
+  gap: var(--space-6);
+  max-width: 36rem;
+}
+
+/* ------------------------------------------------------------------- */
+/* Field rows (used across steps)                                      */
+/* ------------------------------------------------------------------- */
+
+.np-field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.np-field-label {
+  font-size: var(--t-body);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.np-field-help {
+  font-size: var(--t-body-s);
+  color: var(--ink-3);
+}
+
+.np-field-error {
+  font-size: var(--t-body-s);
+  color: var(--warn);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-left: var(--w-thick) solid var(--warn);
+}
+
+/* ------------------------------------------------------------------- */
+/* Action footer                                                       */
+/* ------------------------------------------------------------------- */
+
+.np-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-6);
+  border-top: var(--rule-hair);
+  margin-top: var(--space-2);
+}
+
+/* ------------------------------------------------------------------- */
+/* Responsive                                                          */
+/* ------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .np-steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .np-steps .np-step-tab:nth-child(2),
+  .np-steps .np-step-tab:nth-child(4) {
+    border-right: 0;
+  }
+  .np-steps .np-step-tab:nth-child(3),
+  .np-steps .np-step-tab:nth-child(4) {
+    border-top: var(--rule-hair);
+  }
+}
+
+@media (max-width: 720px) {
+  .np-crop-layout,
+  .np-convert-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .np-steps {
+    grid-template-columns: 1fr;
+  }
+  .np-steps .np-step-tab {
+    border-left: 0;
+    border-top: var(--rule-hair);
+  }
+  .np-steps .np-step-tab:first-child {
+    border-top: 0;
+  }
+}
