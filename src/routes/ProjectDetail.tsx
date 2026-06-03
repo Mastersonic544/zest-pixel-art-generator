@@ -12,7 +12,7 @@
 import { useState, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useProjects } from "@/store/projects";
-import { MosaicPreview, MosaicStats } from "@/components/mosaic";
+import { MosaicPreview, MosaicStats, ImageViewModal } from "@/components/mosaic";
 import type { PreviewMode } from "@/components/mosaic";
 import SharePanel from "@/components/SharePanel";
 import type { Project } from "@/lib/types";
@@ -28,6 +28,7 @@ export default function ProjectDetail() {
 
   const [mode, setMode] = useState<PreviewMode>("colored");
   const [shareOpen, setShareOpen] = useState(false);
+  const [viewerOpen, setViewerOpen] = useState(false);
   // Show the shared-project edit warning when Studio is clicked on a shared project.
   const [showEditWarn, setShowEditWarn] = useState(false);
 
@@ -121,8 +122,14 @@ export default function ProjectDetail() {
               </div>
             </div>
 
-            {/* Preview */}
-            <MosaicPreview project={project} mode={mode} size={480} />
+            {/* Preview — click to open fullscreen viewer */}
+            <button
+              className="pd-preview-btn"
+              onClick={() => setViewerOpen(true)}
+              aria-label="Open fullscreen viewer"
+            >
+              <MosaicPreview project={project} mode={mode} size={480} />
+            </button>
 
             {/* Action bar */}
             <div className="pd-actions">
@@ -190,6 +197,15 @@ export default function ProjectDetail() {
             )}
           </div>
         </div>
+
+        {/* Fullscreen mosaic viewer */}
+        {viewerOpen && (
+          <ImageViewModal
+            project={project}
+            initialMode={mode}
+            onClose={() => setViewerOpen(false)}
+          />
+        )}
 
         {/* Footer crosslinks */}
         <footer className="pd-foot">

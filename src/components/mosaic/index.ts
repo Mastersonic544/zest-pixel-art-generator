@@ -1,5 +1,6 @@
 export { default as MosaicPreview } from "./MosaicPreview";
 export type { PreviewMode, MosaicProjectLike } from "./MosaicPreview";
+export { default as ImageViewModal } from "./ImageViewModal";
 export { default as MosaicStats } from "./MosaicStats";
 export type { MosaicStatsProjectLike } from "./MosaicStats";
 export { default as ColorLegend } from "./ColorLegend";

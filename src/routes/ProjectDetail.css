@@ -52,6 +52,47 @@
 }
 
 /* ------------------------------------------------------------------- */
+/* Preview button (click to open viewer)                              */
+/* ------------------------------------------------------------------- */
+
+.pd-preview-btn {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: zoom-in;
+  border-radius: var(--radius-0);
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.pd-preview-btn:hover {
+  opacity: 0.9;
+}
+
+.pd-preview-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-0);
+}
+
+/* MosaicPreview sets its own max-width; let the button fill the column */
+.pd-preview-btn .mp {
+  max-width: 100% !important;
+}
+
+.pd-preview-btn .mp-frame {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 1 / 1;
+}
+
+.pd-preview-btn canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ------------------------------------------------------------------- */
 /* Toolbar                                                             */
 /* ------------------------------------------------------------------- */
 
