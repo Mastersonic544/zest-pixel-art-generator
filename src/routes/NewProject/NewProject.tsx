@@ -115,12 +115,10 @@ export default function NewProject() {
 
 
 
-  async function handleSave() {
-    if (!source || grid.length === 0) return;
-
-    const thumb = makeCroppedThumb(source.bitmap, crop.x, crop.y, crop.size);
+  function buildProject(): Project {
+    const thumb = source ? makeCroppedThumb(source.bitmap, crop.x, crop.y, crop.size) : undefined;
     const now = new Date().toISOString();
-    const project: Project = {
+    return {
       id: newId(),
       name: projectName.trim() || "Untitled project",
       createdAt: now,
@@ -133,11 +131,22 @@ export default function NewProject() {
       grid,
       sourceThumb: thumb,
     };
+  }
 
+  async function handleSave() {
+    if (!source || grid.length === 0) return;
+    const project = buildProject();
     saveProject(project);
-    // Clean up object URL.
     URL.revokeObjectURL(source.objectUrl);
     navigate(`/project/${project.id}`);
+  }
+
+  function handleSaveToStudio() {
+    if (!source || grid.length === 0) return;
+    const project = buildProject();
+    saveProject(project);
+    URL.revokeObjectURL(source.objectUrl);
+    navigate(`/project/${project.id}/studio`);
   }
 
   // --- Render ---
@@ -226,6 +235,13 @@ export default function NewProject() {
                   onClick={() => setStep("crop")}
                 >
                   Back
+                </button>
+                <button
+                  className="btn"
+                  onClick={handleSaveToStudio}
+                  disabled={grid.length === 0}
+                >
+                  Go to Studio
                 </button>
                 <button
                   className="btn btn-primary"

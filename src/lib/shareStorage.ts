@@ -45,8 +45,13 @@ function makeFirestoreStorage(): ShareStorage {
         }
       }
 
+      // Firestore rejects undefined field values — strip them before writing.
+      const projectDoc = { ...project, sourceThumb: thumb };
+      if (projectDoc.sourceThumb === undefined) delete projectDoc.sourceThumb;
+      if (projectDoc.shareId    === undefined) delete projectDoc.shareId;
+
       await setDoc(doc(db, "shares", shareId), {
-        project: { ...project, sourceThumb: thumb },
+        project: projectDoc,
         createdAt: serverTimestamp(),
       });
     },
