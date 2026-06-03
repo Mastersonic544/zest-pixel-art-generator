@@ -8,5 +8,5 @@ const firebaseConfig = {
   appId:       import.meta.env.VITE_FIREBASE_APP_ID       as string,
 };
 
-const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+const app = getApps().length ? getApps()[0]! : initializeApp(firebaseConfig);
 export const db = getFirestore(app);
