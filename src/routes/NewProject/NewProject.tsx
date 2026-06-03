@@ -129,7 +129,7 @@ export default function NewProject() {
       dithered,
       paletteSnapshot: snapshotPalette,
       grid,
-      sourceThumb: thumb,
+      ...(thumb !== undefined && { sourceThumb: thumb }),
     };
   }
 
