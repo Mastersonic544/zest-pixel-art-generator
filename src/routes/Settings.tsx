@@ -311,7 +311,8 @@ export default function Settings() {
 
         <footer className="sx-foot">
           <div className="crosslinks">
-            <Link to="/styleguide">Styleguide</Link>
+            <Link to="/">Dashboard</Link>
+            {import.meta.env.DEV && <Link to="/styleguide">Styleguide</Link>}
           </div>
           <span className="num" style={{ color: "var(--ink-3)", fontSize: "var(--t-body-s)" }}>
             ZEST &middot; 2026

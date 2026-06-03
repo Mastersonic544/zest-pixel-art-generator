@@ -75,7 +75,7 @@ export default function StepUpload({ onImage }: Props) {
               {dragging ? "Drop to upload" : "Drag an image here"}
             </span>
             <span className="np-upload-sub">
-              or click to browse &mdash; PNG, JPG, WEBP
+              or click to browse. PNG, JPG, WEBP.
             </span>
           </>
         )}

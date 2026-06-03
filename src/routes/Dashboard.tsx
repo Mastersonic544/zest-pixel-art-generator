@@ -254,7 +254,6 @@ export default function Dashboard() {
         <footer className="db-foot">
           <div className="crosslinks">
             <Link to="/settings">Settings</Link>
-            <Link to="/styleguide">Styleguide</Link>
           </div>
           <span className="num" style={{ color: "var(--ink-3)", fontSize: "var(--t-body-s)" }}>
             ZEST &middot; 2026
