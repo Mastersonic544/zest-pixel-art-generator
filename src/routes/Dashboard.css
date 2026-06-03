@@ -419,6 +419,8 @@
   .db-list-head,
   .db-row {
     grid-template-columns: 2.5rem 1fr;
+    padding: var(--space-2) var(--space-2);
+    gap: var(--space-3);
   }
 
   .db-list-head span:nth-child(3),
@@ -426,5 +428,27 @@
   .db-row > span:nth-child(4),
   .db-row > span:nth-child(5) {
     display: none;
+  }
+
+  .db-kpi {
+    padding: var(--space-4);
+  }
+
+  .db-kpi-figure {
+    font-size: var(--t-stat-l);
+  }
+
+  .db-empty {
+    padding: var(--space-7) 0 var(--space-8);
+  }
+
+  .db-empty-grid {
+    display: none; /* hide decoration on tiny screens */
+  }
+
+  .db-foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
   }
 }

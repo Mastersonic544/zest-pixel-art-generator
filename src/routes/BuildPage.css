@@ -248,13 +248,24 @@
     padding: 0 var(--space-4);
   }
   .bp-title {
-    font-size: var(--t-display-s, var(--t-h1)); /* fallback to h1 */
+    font-size: var(--t-display-s, var(--t-h1));
   }
   .bp-assembly-wrap {
     padding: var(--space-3) var(--space-4) var(--space-7);
   }
   .bp-topbar-label {
-    /* hide on very small screens — just show brand + exit */
     display: none;
+  }
+  .bp-main {
+    padding: var(--space-5) 0 var(--space-7);
+  }
+}
+
+@media (max-width: 480px) {
+  .bp-title {
+    font-size: var(--t-h1);
+  }
+  .bp-cta-btn {
+    height: 3.25rem;
   }
 }

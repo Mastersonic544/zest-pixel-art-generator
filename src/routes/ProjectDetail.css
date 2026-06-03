@@ -135,11 +135,43 @@
 
   .pd-stats-col {
     position: static;
-    /* On narrow screens stats appear below the preview for visual flow */
     order: 2;
   }
 
   .pd-preview-col {
     order: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .pd-body {
+    padding-top: var(--space-5);
+    gap: var(--space-5);
+  }
+
+  .pd-toolbar {
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .pd-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pd-actions .btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  .pd-edit-warn-actions {
+    flex-direction: column;
+  }
+
+  .pd-edit-warn-actions .btn {
+    width: 100%;
   }
 }

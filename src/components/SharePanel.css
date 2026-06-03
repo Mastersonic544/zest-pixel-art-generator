@@ -180,3 +180,24 @@
   max-width: 32ch;
   line-height: var(--lh-body);
 }
+
+@media (max-width: 480px) {
+  .sp-qr-block {
+    flex-direction: column;
+  }
+
+  .sp-qr-img {
+    width: 96px;
+    height: 96px;
+  }
+
+  .sp-error {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .sp-error .btn-tiny {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}

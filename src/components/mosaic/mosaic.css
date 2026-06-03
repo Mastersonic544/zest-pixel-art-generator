@@ -187,3 +187,15 @@
   .ms-figures > div + div,
   .ms-info > div + div { border-left: 0; border-top: var(--rule-hair); padding-left: 0; }
 }
+
+@media (max-width: 480px) {
+  /* Color legend: drop hex and low-count flag columns — too many for small screens */
+  .cl-row {
+    grid-template-columns: 1.75rem 1rem 1fr auto;
+    column-gap: var(--space-2);
+  }
+  .cl-row > .cl-hex,
+  .cl-row > .cl-flag {
+    display: none;
+  }
+}

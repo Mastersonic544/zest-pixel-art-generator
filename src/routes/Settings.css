@@ -150,3 +150,32 @@
   .sx-row > .sx-mv-down   { grid-row: 1; }
   .sx-row > .sx-rm        { grid-row: 1; }
 }
+
+@media (max-width: 480px) {
+  /* Palette toolbar: stack name + reset vertically */
+  .sx-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+  .sx-toolbar-right {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .sx-pname {
+    width: 100%;
+    max-width: none;
+  }
+
+  /* Palette table: drop LEGO ID and part hint on small screens */
+  .sx-row {
+    grid-template-columns: 2rem 1.5rem 1fr auto auto auto;
+  }
+  .sx-row > .sx-lid-cell,
+  .sx-row > .sx-part-cell {
+    display: none;
+  }
+  .sx-row > .sx-hex-cell {
+    grid-column: 3 / -4;
+  }
+}

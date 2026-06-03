@@ -378,3 +378,32 @@
     gap: var(--space-3);
   }
 }
+
+@media (max-width: 480px) {
+  .page {
+    padding: var(--space-5) 0 var(--space-7);
+  }
+
+  .masthead-title {
+    font-size: var(--t-h1);
+  }
+
+  .masthead-meta {
+    font-size: var(--t-caption);
+    column-gap: var(--space-3);
+  }
+
+  .section {
+    padding: var(--space-5) 0 var(--space-4);
+    gap: var(--space-3);
+  }
+
+  /* Ensure segmented controls don't overflow on very small screens */
+  .segmented {
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    min-height: 44px; /* WCAG touch target */
+  }
+}
