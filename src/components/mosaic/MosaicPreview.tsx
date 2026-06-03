@@ -24,7 +24,7 @@ type Props = {
 };
 
 /** Min cell size (in CSS px) at which the code-mode number is drawn. */
-const CODE_NUMBER_MIN_CELL = 11;
+const CODE_NUMBER_MIN_CELL = 5;
 
 export default function MosaicPreview({ project, mode, size = 480, highlightSet }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -114,21 +114,26 @@ function drawMosaic(
       if (!color) continue;
       const px = x * cell;
       const py = y * cellH;
+      const isDimmed = highlightSet !== undefined && !highlightSet.has(cellIdx);
       switch (mode) {
         case "colored":
           drawColored(ctx, px, py, cell, cellH, color.hex);
+          if (isDimmed) {
+            ctx.fillStyle = "rgba(244, 242, 236, 0.72)";
+            ctx.fillRect(px, py, cell, cellH);
+          }
           break;
         case "bricks":
           drawBrick(ctx, px, py, cell, cellH, color.hex);
+          if (isDimmed) {
+            ctx.fillStyle = "rgba(244, 242, 236, 0.72)";
+            ctx.fillRect(px, py, cell, cellH);
+          }
           break;
         case "code":
-          drawCode(ctx, px, py, cell, cellH, color.hex, id);
+          // isDimmed passed in so overlay is applied before the number is drawn.
+          drawCode(ctx, px, py, cell, cellH, color.hex, id, isDimmed);
           break;
-      }
-      // Highlight overlay: dim cells not in the active set.
-      if (highlightSet !== undefined && !highlightSet.has(cellIdx)) {
-        ctx.fillStyle = "rgba(244, 242, 236, 0.72)"; // --paper at 72% opacity
-        ctx.fillRect(px, py, cell, cellH);
       }
     }
   }
@@ -228,26 +233,29 @@ function drawCode(
   w: number,
   h: number,
   hex: string,
-  id: number
+  id: number,
+  isDimmed: boolean
 ): void {
   const cell = Math.min(w, h);
 
-  // Faint tint: mix the palette color into paper, so all numbers are legible
-  // but the cell still telegraphs its color group at a glance.
   const tint = mixHex(hex, "#F4F2EC", 0.82);
   ctx.fillStyle = tint;
   ctx.fillRect(x, y, w, h);
 
-  // Hairline cell separator (lighter than the chrome). Drawn on right+bottom
-  // only so the page-level border carries the top/left edges.
   ctx.fillStyle = "#E6E2D6";
   ctx.fillRect(x + w - 1, y, 1, h);
   ctx.fillRect(x, y + h - 1, w, 1);
 
+  // Dimming overlay applied BEFORE the number so the number stays on top.
+  if (isDimmed) {
+    ctx.fillStyle = "rgba(244, 242, 236, 0.72)";
+    ctx.fillRect(x, y, w, h);
+  }
+
   if (cell >= CODE_NUMBER_MIN_CELL) {
     const fontPx = Math.floor(cell * 0.48);
     ctx.font = `500 ${fontPx}px "JetBrains Mono", ui-monospace, monospace`;
-    ctx.fillStyle = "#0A0A08";
+    ctx.fillStyle = isDimmed ? "rgba(10,10,8,0.40)" : "#0A0A08";
     ctx.fillText(String(id), x + w / 2, y + h / 2 + 0.5);
   }
 }
