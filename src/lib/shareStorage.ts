@@ -30,27 +30,15 @@ function makeFirestoreStorage(): ShareStorage {
     mode: "firestore",
 
     async write(shareId, project) {
-      const { db }               = await import("./firebase");
+      const { db } = await import("./firebase");
       const { doc, setDoc, serverTimestamp } = await import("firebase/firestore");
-      const { uploadToCloudinary, isDataUrl } = await import("./cloudinary");
 
-      // Swap base64 thumb for a Cloudinary WebP URL before persisting.
-      let thumb = project.sourceThumb;
-      if (thumb && isDataUrl(thumb)) {
-        try {
-          thumb = await uploadToCloudinary(thumb);
-        } catch {
-          // Non-fatal: store without thumbnail rather than block sharing.
-          thumb = undefined;
-        }
-      }
-
-      // JSON round-trip strips every undefined field at any nesting depth
-      // (Color.legoColorId, Color.legoPartHint, sourceThumb, shareId, etc.)
-      // because JSON.stringify drops undefined values entirely.
-      const projectDoc = JSON.parse(
-        JSON.stringify({ ...project, sourceThumb: thumb })
-      ) as Project;
+      // sourceThumb is a base64 data URL — too large for Firestore and not
+      // rendered on the build page (which uses grid + paletteSnapshot only).
+      // JSON.parse/JSON.stringify also strips every other undefined optional
+      // field (Color.legoColorId, Color.legoPartHint, shareId, etc.).
+      const projectDoc = JSON.parse(JSON.stringify(project)) as Record<string, unknown>;
+      delete projectDoc["sourceThumb"];
 
       await setDoc(doc(db, "shares", shareId), {
         project: projectDoc,
