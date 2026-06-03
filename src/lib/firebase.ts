@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeFirestore, getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey:      import.meta.env.VITE_FIREBASE_API_KEY      as string,
@@ -9,4 +9,14 @@ const firebaseConfig = {
 };
 
 const app = getApps().length ? getApps()[0]! : initializeApp(firebaseConfig);
+
+// ignoreUndefinedProperties: Firestore silently drops undefined fields
+// instead of throwing. Belt-and-suspenders alongside the JSON round-trip
+// in shareStorage.ts.
+try {
+  initializeFirestore(app, { ignoreUndefinedProperties: true });
+} catch {
+  // Already initialized (HMR / module re-evaluation) — existing instance is fine.
+}
+
 export const db = getFirestore(app);
