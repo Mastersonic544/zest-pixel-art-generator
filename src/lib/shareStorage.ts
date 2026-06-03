@@ -45,10 +45,12 @@ function makeFirestoreStorage(): ShareStorage {
         }
       }
 
-      // Firestore rejects undefined field values — strip them before writing.
-      const projectDoc = { ...project, sourceThumb: thumb };
-      if (projectDoc.sourceThumb === undefined) delete projectDoc.sourceThumb;
-      if (projectDoc.shareId    === undefined) delete projectDoc.shareId;
+      // JSON round-trip strips every undefined field at any nesting depth
+      // (Color.legoColorId, Color.legoPartHint, sourceThumb, shareId, etc.)
+      // because JSON.stringify drops undefined values entirely.
+      const projectDoc = JSON.parse(
+        JSON.stringify({ ...project, sourceThumb: thumb })
+      ) as Project;
 
       await setDoc(doc(db, "shares", shareId), {
         project: projectDoc,
