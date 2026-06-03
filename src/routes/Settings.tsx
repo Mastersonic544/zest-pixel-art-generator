@@ -4,7 +4,7 @@ import { useSettings, isValidHex } from "@/store/settings";
 import type { CanvasSize, BaseplateColor } from "@/lib/types";
 import "./Settings.css";
 
-const CANVAS_SIZES: CanvasSize[] = [16, 32, 48];
+const CANVAS_SIZES: CanvasSize[] = [16, 32, 50];
 const BASEPLATES: BaseplateColor[] = ["black", "white"];
 
 export default function Settings() {

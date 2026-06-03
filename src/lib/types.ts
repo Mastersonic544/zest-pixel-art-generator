@@ -19,7 +19,7 @@ export type Palette = {
 };
 
 export type BaseplateColor = "black" | "white";
-export type CanvasSize = 16 | 32 | 48;
+export type CanvasSize = 16 | 32 | 50;
 
 export type Defaults = {
   canvasSize: CanvasSize;

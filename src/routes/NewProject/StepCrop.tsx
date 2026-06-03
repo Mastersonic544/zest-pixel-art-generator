@@ -23,7 +23,7 @@ type Props = {
   onSizeChange: (size: CanvasSize) => void;
 };
 
-const CANVAS_SIZES: CanvasSize[] = [16, 32, 48];
+const CANVAS_SIZES: CanvasSize[] = [16, 32, 50];
 const PREVIEW_MAX = 480; // max CSS px for the preview canvas
 
 export default function StepCrop({
