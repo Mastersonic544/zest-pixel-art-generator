@@ -207,8 +207,8 @@ export default function GuidedAssembly({ project, onHighlight, onClose }: Props)
           <div className="ga-page-of">{stepIdx + 1} / {totalSteps}</div>
         </div>
 
-        {/* Main content area */}
-        <div className="ga-page-body">
+        {/* Main content area — wider mosaic column in code mode */}
+        <div className={`ga-page-body${previewMode === "code" ? " is-code-mode" : ""}`}>
 
           {/* Left: step instruction card */}
           <div className="ga-instruction-card">
@@ -241,12 +241,12 @@ export default function GuidedAssembly({ project, onHighlight, onClose }: Props)
             )}
           </div>
 
-          {/* Right: mosaic image (highlighted preview) */}
+          {/* Right: mosaic image (highlighted preview) — larger in code mode for legibility */}
           <div className="ga-mosaic-panel">
             <MosaicPreview
               project={highlightedProject}
               mode={previewMode}
-              size={340}
+              size={previewMode === "code" ? 560 : 340}
               {...(currentStep.activeIndices.size > 0 ? { highlightSet: currentStep.activeIndices } : {})}
             />
           </div>
@@ -482,7 +482,7 @@ function PrintPage({ step, stepIdx, totalSteps, steps, project, usedColors, prev
           <div className="ga-page-of">{stepIdx + 1} / {totalSteps}</div>
         </div>
 
-        <div className="ga-page-body">
+        <div className={`ga-page-body${previewMode === "code" ? " is-code-mode" : ""}`}>
           <div className="ga-instruction-card">
             {detail.kind === "color"   && <ColorInstruction   detail={detail} stepNum={stepIdx + 1} />}
             {detail.kind === "quarter" && <QuarterInstruction detail={detail} stepNum={stepIdx + 1} />}
@@ -506,7 +506,7 @@ function PrintPage({ step, stepIdx, totalSteps, steps, project, usedColors, prev
             <MosaicPreview
               project={project}
               mode={previewMode}
-              size={340}
+              size={previewMode === "code" ? 560 : 340}
               {...(step.activeIndices.size > 0 ? { highlightSet: step.activeIndices } : {})}
             />
           </div>

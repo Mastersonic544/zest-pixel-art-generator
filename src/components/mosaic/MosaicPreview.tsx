@@ -253,9 +253,9 @@ function drawCode(
   }
 
   if (cell >= CODE_NUMBER_MIN_CELL) {
-    const fontPx = Math.floor(cell * 0.48);
-    ctx.font = `500 ${fontPx}px "JetBrains Mono", ui-monospace, monospace`;
-    ctx.fillStyle = isDimmed ? "rgba(10,10,8,0.40)" : "#0A0A08";
+    const fontPx = Math.max(6, Math.floor(cell * 0.55));
+    ctx.font = `700 ${fontPx}px "JetBrains Mono", ui-monospace, monospace`;
+    ctx.fillStyle = isDimmed ? "rgba(10,10,8,0.45)" : "#0A0A08";
     ctx.fillText(String(id), x + w / 2, y + h / 2 + 0.5);
   }
 }

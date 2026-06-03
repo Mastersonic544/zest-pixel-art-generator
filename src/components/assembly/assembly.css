@@ -93,6 +93,16 @@
   align-items: start;
 }
 
+/* Code mode: mosaic needs all the horizontal space — show it above instructions */
+.ga-page-body.is-code-mode {
+  grid-template-columns: 1fr;
+}
+.ga-page-body.is-code-mode .ga-mosaic-panel {
+  order: -1;
+  display: flex;
+  justify-content: center;
+}
+
 /* Instruction card */
 .ga-instruction-card {
   display: grid;

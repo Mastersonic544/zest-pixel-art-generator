@@ -1,34 +1,19 @@
 /*
   shareStorage.ts — abstraction layer for shared-project persistence.
 
-  PRD §7: "structure the share read/write behind a single storage interface
-  so a Vercel KV / Upstash backend can be dropped in behind one env var."
-
-  Interface
-  ---------
-  ShareStorage.write(shareId, project)  — persist a project under a share key
-  ShareStorage.read(shareId)            — retrieve a project by share key
-  ShareStorage.mode                     — "local" | "kv"
-
   Backend selection
   -----------------
-  Set VITE_SHARE_KV_URL to the base URL of a Vercel KV / Upstash REST
-  endpoint to enable cross-device sharing. When the var is absent (default),
-  the local implementation stores the serialised project in localStorage keyed
-  by "zest.share.<shareId>". The local mode is read-only on other
-  devices/browsers; the UI surfaces a clear note about this.
+  When VITE_FIREBASE_PROJECT_ID is set → writes/reads via Firestore.
+    - sourceThumb base64 data URLs are uploaded to Cloudinary (WebP) first.
+    - Collection: "shares", document ID = shareId.
 
-  KV REST contract (Vercel KV / Upstash)
-  ---------------------------------------
-  POST  ${VITE_SHARE_KV_URL}/set/<key>     body: JSON.stringify(project)
-  GET   ${VITE_SHARE_KV_URL}/get/<key>     response: { result: <project JSON> | null }
-
-  The VITE_SHARE_KV_REST_API_TOKEN env var carries the bearer token when set.
+  When the env var is absent → falls back to localStorage (device-local).
+    - Share links only work in the same browser; UI surfaces a clear warning.
 */
 
 import type { Project } from "./types";
 
-export type StorageMode = "local" | "kv";
+export type StorageMode = "local" | "firestore";
 
 export type ShareStorage = {
   mode: StorageMode;
@@ -37,19 +22,56 @@ export type ShareStorage = {
 };
 
 /* ------------------------------------------------------------------ */
-/* Local (localStorage) implementation                                */
+/* Firestore + Cloudinary implementation                              */
 /* ------------------------------------------------------------------ */
 
-function shareKey(shareId: string): string {
-  return `zest.share.${shareId}`;
+function makeFirestoreStorage(): ShareStorage {
+  return {
+    mode: "firestore",
+
+    async write(shareId, project) {
+      const { db }               = await import("./firebase");
+      const { doc, setDoc, serverTimestamp } = await import("firebase/firestore");
+      const { uploadToCloudinary, isDataUrl } = await import("./cloudinary");
+
+      // Swap base64 thumb for a Cloudinary WebP URL before persisting.
+      let thumb = project.sourceThumb;
+      if (thumb && isDataUrl(thumb)) {
+        try {
+          thumb = await uploadToCloudinary(thumb);
+        } catch {
+          // Non-fatal: store without thumbnail rather than block sharing.
+          thumb = undefined;
+        }
+      }
+
+      await setDoc(doc(db, "shares", shareId), {
+        project: { ...project, sourceThumb: thumb },
+        createdAt: serverTimestamp(),
+      });
+    },
+
+    async read(shareId) {
+      const { db }        = await import("./firebase");
+      const { doc, getDoc } = await import("firebase/firestore");
+
+      const snap = await getDoc(doc(db, "shares", shareId));
+      if (!snap.exists()) return null;
+      return (snap.data().project as Project) ?? null;
+    },
+  };
 }
 
-const localStorage_: ShareStorage = {
+/* ------------------------------------------------------------------ */
+/* localStorage fallback                                              */
+/* ------------------------------------------------------------------ */
+
+const localStorageBackend: ShareStorage = {
   mode: "local",
 
   async write(shareId, project) {
     try {
-      localStorage.setItem(shareKey(shareId), JSON.stringify(project));
+      localStorage.setItem(`zest.share.${shareId}`, JSON.stringify(project));
     } catch (e) {
       throw new Error(
         `Failed to save share data locally: ${e instanceof Error ? e.message : String(e)}`
@@ -59,7 +81,7 @@ const localStorage_: ShareStorage = {
 
   async read(shareId) {
     try {
-      const raw = localStorage.getItem(shareKey(shareId));
+      const raw = localStorage.getItem(`zest.share.${shareId}`);
       if (!raw) return null;
       return JSON.parse(raw) as Project;
     } catch {
@@ -69,61 +91,15 @@ const localStorage_: ShareStorage = {
 };
 
 /* ------------------------------------------------------------------ */
-/* KV REST implementation (Vercel KV / Upstash)                       */
-/* ------------------------------------------------------------------ */
-
-function makeKvStorage(baseUrl: string, token: string | undefined): ShareStorage {
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-  };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-
-  return {
-    mode: "kv",
-
-    async write(shareId, project) {
-      const url = `${baseUrl}/set/${encodeURIComponent(shareKey(shareId))}`;
-      const res = await fetch(url, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({ value: JSON.stringify(project) }),
-      });
-      if (!res.ok) {
-        const text = await res.text().catch(() => res.statusText);
-        throw new Error(`KV write failed (${res.status}): ${text}`);
-      }
-    },
-
-    async read(shareId) {
-      const url = `${baseUrl}/get/${encodeURIComponent(shareKey(shareId))}`;
-      const res = await fetch(url, { headers });
-      if (!res.ok) {
-        if (res.status === 404) return null;
-        const text = await res.text().catch(() => res.statusText);
-        throw new Error(`KV read failed (${res.status}): ${text}`);
-      }
-      const json = (await res.json()) as { result?: string | null };
-      if (!json.result) return null;
-      try {
-        return JSON.parse(json.result) as Project;
-      } catch {
-        return null;
-      }
-    },
-  };
-}
-
-/* ------------------------------------------------------------------ */
 /* Singleton — resolved once at module load                           */
 /* ------------------------------------------------------------------ */
 
-const KV_URL = import.meta.env.VITE_SHARE_KV_URL as string | undefined;
-const KV_TOKEN = import.meta.env.VITE_SHARE_KV_REST_API_TOKEN as string | undefined;
+const FIREBASE_PROJECT_ID = import.meta.env.VITE_FIREBASE_PROJECT_ID as string | undefined;
 
 export const shareStorage: ShareStorage =
-  KV_URL && KV_URL.trim() !== ""
-    ? makeKvStorage(KV_URL.trim(), KV_TOKEN)
-    : localStorage_;
+  FIREBASE_PROJECT_ID && FIREBASE_PROJECT_ID.trim() !== ""
+    ? makeFirestoreStorage()
+    : localStorageBackend;
 
-/** True when running without a KV backend — share links are device-local. */
+/** True when running without a Firestore backend — share links are device-local. */
 export const isLocalShareMode = shareStorage.mode === "local";
