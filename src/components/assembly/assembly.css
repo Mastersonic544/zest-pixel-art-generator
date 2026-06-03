@@ -1,457 +1,491 @@
-/*
-  Assembly guide — GuidedAssembly + MiniMap.
-  Builder-first layout: the current step is the hero.
-  Large tap targets for Prev / Next. Fully responsive.
-*/
+/* assembly.css — GuidedAssembly + MiniMap — LEGO instruction booklet */
 
-/* ------------------------------------------------------------------- */
-/* MiniMap canvas                                                      */
-/* ------------------------------------------------------------------- */
-
+/* ── MiniMap ─────────────────────────────────────────── */
 .mm-canvas {
   display: block;
-  border: var(--rule-ink);
+  border: 2px solid var(--hairline);
+  border-radius: 4px;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
 
-/* ------------------------------------------------------------------- */
-/* Container                                                           */
-/* ------------------------------------------------------------------- */
-
-.ga {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  margin-top: var(--space-5);
-  background: var(--surface);
-  border: var(--w-thick) solid var(--hairline);
+/* ── Booklet container ───────────────────────────────── */
+.ga-booklet {
+  background: var(--paper);
+  border: 2px solid var(--hairline);
   border-radius: var(--radius-1);
-  overflow: hidden;
   box-shadow: var(--shadow-card);
+  overflow: hidden;
 }
 
-/* ------------------------------------------------------------------- */
-/* Top bar: mode switcher + exit                                       */
-/* ------------------------------------------------------------------- */
-
-.ga-topbar {
+/* ── Controls bar (hidden in print) ─────────────────── */
+.ga-controls {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
   padding: var(--space-3) var(--space-5);
-  border-bottom: var(--rule-hair);
   background: var(--paper-2);
+  border-bottom: 1px solid var(--hairline);
+  flex-wrap: wrap;
 }
-
-/* Mode switcher — a button that opens a dropdown */
-.ga-mode-switcher {
-  position: relative;
-}
-
-.ga-mode-btn {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  background: none;
-  border: var(--rule-hair);
-  padding: var(--space-2) var(--space-3);
-  cursor: pointer;
-  font-family: var(--font-sans);
-  font-size: var(--t-body-s);
-  font-weight: 600;
-  color: var(--ink);
-  transition: background var(--dur-fast) var(--ease-out);
-}
-
-.ga-mode-btn:hover {
-  background: var(--paper);
-}
-
-.ga-mode-btn:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-
-.ga-mode-current {
-  color: var(--ink);
-}
-
-.ga-mode-caret {
-  font-size: 0.5rem;
-  color: var(--ink-3);
-  line-height: 1;
-}
-
-/* Dropdown */
-.ga-mode-menu {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  background: var(--surface);
-  border: var(--rule-ink);
-  min-width: 16rem;
-}
-
-.ga-mode-option {
-  display: grid;
-  gap: var(--space-1);
-  padding: var(--space-3) var(--space-4);
-  text-align: left;
-  background: none;
-  border: 0;
-  border-bottom: var(--rule-hair);
-  cursor: pointer;
-  transition: background var(--dur-fast) var(--ease-out);
-}
-
-.ga-mode-option:last-child {
-  border-bottom: 0;
-}
-
-.ga-mode-option:hover {
-  background: var(--paper-2);
-}
-
-.ga-mode-option.is-active {
-  background: var(--paper-2);
-}
-
-.ga-mode-option:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-
-.ga-mode-option-label {
-  font-family: var(--font-sans);
-  font-size: var(--t-body-s);
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.ga-mode-option-hint {
-  font-family: var(--font-sans);
-  font-size: var(--t-caption);
-  color: var(--ink-3);
-  line-height: 1.4;
-}
-
-/* ------------------------------------------------------------------- */
-/* Progress bar                                                        */
-/* ------------------------------------------------------------------- */
-
-.ga-progress-track {
-  height: 4px;
-  background: var(--hairline);
-  position: relative;
-  overflow: hidden;
-}
-
-.ga-progress-fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  background: var(--accent);
-  transition: width 300ms var(--ease-out);
-}
-
-/* ------------------------------------------------------------------- */
-/* Step counter row                                                    */
-/* ------------------------------------------------------------------- */
-
-.ga-counter-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-5);
-  border-bottom: var(--rule-hair);
-}
-
-.ga-counter-text {
-  font-family: var(--font-mono);
-  font-size: var(--t-body-s);
-  color: var(--ink-3);
-}
-
-.ga-counter-num {
-  font-size: var(--t-body);
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.ga-counter-sep {
-  color: var(--ink-4);
-}
-
-.ga-counter-total {
-  color: var(--ink-3);
-}
-
-.ga-done-badge {
-  font-family: var(--font-sans);
-  font-size: var(--t-caption);
-  font-weight: 800;
-  letter-spacing: var(--ls-caps);
-  text-transform: uppercase;
-  color: var(--accent-ink);
-  background: var(--accent);
-  padding: 3px 10px;
-  border-radius: var(--radius-pill);
-}
-
-/* ------------------------------------------------------------------- */
-/* Main content: step card + mini-map                                 */
-/* ------------------------------------------------------------------- */
-
-.ga-content {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--space-5);
-  align-items: start;
-  padding: var(--space-5) var(--space-5);
-}
-
-/* ------------------------------------------------------------------- */
-/* Step card                                                           */
-/* ------------------------------------------------------------------- */
-
-.ga-step-card {
-  /* fills the left column */
-}
-
-.ga-card-eyebrow {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: var(--t-caption);
-  letter-spacing: var(--ls-caps);
-  text-transform: uppercase;
-  color: var(--ink-3);
-  margin-bottom: var(--space-3);
-}
-
-.ga-card-name {
-  display: block;
-  font-family: var(--font-sans);
-  font-size: var(--t-h1);
-  font-weight: 800;
-  letter-spacing: var(--ls-h);
-  color: var(--ink);
-  line-height: var(--lh-h1);
-  margin-bottom: var(--space-3);
-}
-
-.ga-card-instruction {
-  font-size: var(--t-body);
-  color: var(--ink-2);
-  line-height: var(--lh-body);
-  margin: var(--space-3) 0 0;
-  max-width: 40ch;
-}
-
-.ga-card-instruction strong {
-  color: var(--ink);
-  font-weight: 600;
-}
-
-/* Tags: Bag number + piece count */
-.ga-card-tags {
+.ga-controls-left {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   flex-wrap: wrap;
-  margin-bottom: var(--space-2);
+}
+.ga-controls-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
 }
 
-.ga-tag {
-  font-family: var(--font-sans);
-  font-size: var(--t-body-s);
-  font-weight: 700;
-  letter-spacing: var(--ls-caps);
-  text-transform: uppercase;
-  padding: var(--space-1) var(--space-3);
-  border: var(--w-thick) solid var(--ink);
-  border-radius: var(--radius-pill);
-  color: var(--ink);
-  background: var(--paper-2);
-  white-space: nowrap;
+/* ── Page ─────────────────────────────────────────────── */
+.ga-page {
+  display: flex;
+  flex-direction: column;
 }
 
-.ga-tag-count {
-  border-color: var(--hairline);
-  background: transparent;
-  color: var(--ink-2);
-}
-
-/* Color step: large swatch + name side by side */
-.ga-card-color {
-  display: grid;
-  gap: var(--space-3);
-}
-
-.ga-card-color-main {
+/* Page header strip */
+.ga-page-header {
   display: flex;
   align-items: center;
   gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  background: var(--ink);
+  color: var(--paper);
 }
-
-.ga-card-swatch {
-  display: block;
-  width: 4rem;
-  height: 4rem;
+.ga-page-step-num {
+  font-family: var(--font-mono);
+  font-size: var(--t-stat-m);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  min-width: 2.5rem;
+}
+.ga-page-project-name {
+  font-size: var(--t-body-s);
+  font-weight: 700;
+  color: var(--paper);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.7;
+}
+.ga-page-of {
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+  color: var(--paper);
+  opacity: 0.5;
   flex-shrink: 0;
-  border: var(--w-thick) solid rgba(28,28,27,0.15);
-  border-radius: var(--radius-0);
-  box-shadow: var(--shadow-sm);
 }
 
-.ga-card-color-info {
+/* Page body: instruction card + mosaic */
+.ga-page-body {
   display: grid;
-  gap: var(--space-2);
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-5);
+  align-items: start;
 }
 
-/* Quarter step */
-.ga-card-quarter {
+/* Instruction card */
+.ga-instruction-card {
+  display: grid;
+  gap: var(--space-5);
+  align-content: start;
+}
+
+/* Mosaic panel */
+.ga-mosaic-panel {
+  /* MosaicPreview fills this; constrain to not overflow */
+}
+
+/* ── Color instruction ────────────────────────────────── */
+.ga-instr-color {
+  display: flex;
+  gap: var(--space-5);
+  align-items: flex-start;
+}
+.ga-instr-swatch-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.ga-instr-swatch {
+  display: block;
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: var(--radius-1);
+  border: 2px solid rgba(28,28,27,0.12);
+  box-shadow: var(--shadow-card);
+}
+.ga-piece-bubble {
+  position: absolute;
+  bottom: -0.625rem;
+  right: -0.625rem;
+  background: var(--accent);
+  border: 2px solid var(--paper);
+  border-radius: var(--radius-pill);
+  min-width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-2);
+  line-height: 1.1;
+  box-shadow: 0 2px 6px rgba(28,28,27,0.15);
+}
+.ga-piece-bubble-lg {
+  position: static;
+  width: 5rem;
+  height: 5rem;
+  font-size: 1.2em;
+}
+.ga-piece-bubble-num {
+  font-family: var(--font-mono);
+  font-size: var(--t-body-s);
+  font-weight: 700;
+  color: var(--accent-ink);
+  line-height: 1;
+}
+.ga-piece-bubble-unit {
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-ink);
+  line-height: 1;
+  opacity: 0.75;
+}
+
+.ga-instr-info {
   display: grid;
   gap: var(--space-3);
+  align-content: start;
+}
+.ga-instr-color-name {
+  font-size: var(--t-h2);
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1.15;
+}
+.ga-instr-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.ga-bag-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--t-body-s);
+  font-weight: 700;
+  color: var(--ink-2);
+  background: var(--paper-2);
+  border: 2px solid var(--hairline);
+  border-radius: var(--radius-pill);
+  padding: var(--space-1) var(--space-3);
+}
+.ga-bag-icon {
+  color: var(--accent);
+  font-size: 0.6rem;
+}
+.ga-instr-note {
+  font-size: var(--t-body-s);
+  color: var(--ink-2);
+  line-height: var(--lh-body);
+  font-weight: 500;
+  margin: 0;
+  max-width: 36ch;
+}
+.ga-instr-note strong {
+  color: var(--ink);
+  font-weight: 800;
 }
 
-/* 2x2 quadrant diagram */
+/* ── Quarter instruction ─────────────────────────────── */
+.ga-instr-quarter {
+  display: flex;
+  gap: var(--space-5);
+  align-items: flex-start;
+}
+.ga-instr-quad-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* ── Line instruction ────────────────────────────────── */
+.ga-instr-line {
+  display: flex;
+  gap: var(--space-5);
+  align-items: flex-start;
+}
+
+/* ── Quad diagram ─────────────────────────────────────── */
 .ga-quad {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4px;
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 5rem;
+  height: 5rem;
 }
-
+.ga-quad-lg {
+  width: 7rem;
+  height: 7rem;
+}
 .ga-quad-cell {
   background: var(--paper-2);
-  border: var(--rule-hair);
+  border: 2px solid var(--hairline);
+  border-radius: 4px;
+  transition: background var(--dur-fast) var(--ease-out);
 }
-
 .ga-quad-cell.is-active {
   background: var(--accent);
-  border-color: var(--accent);
+  border-color: var(--accent-dark, #e6c200);
 }
 
-/* Line step */
-.ga-card-line {
-  display: grid;
-  gap: var(--space-3);
-}
-
-/* ------------------------------------------------------------------- */
-/* Mini-map column                                                     */
-/* ------------------------------------------------------------------- */
-
-.ga-map-col {
-  display: grid;
-  gap: var(--space-2);
-  align-content: start;
-  justify-items: center;
-}
-
-.ga-map-label {
-  justify-self: start;
-}
-
-/* Legend */
-.ga-map-legend {
-  display: grid;
-  grid-template-columns: auto auto;
+/* ── Done panel ──────────────────────────────────────── */
+.ga-done-panel {
+  display: flex;
   align-items: center;
-  column-gap: var(--space-2);
-  row-gap: var(--space-1);
-  font-family: var(--font-mono);
-  font-size: var(--t-caption);
-  color: var(--ink-3);
-  justify-self: start;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--accent-faint, #fff8d6);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-1);
 }
-
-.ga-dot {
-  display: inline-block;
-  width: 0.625rem;
-  height: 0.625rem;
-  border: var(--rule-hair);
+.ga-done-checkmark {
+  font-size: var(--t-h1);
+  color: var(--accent);
+  font-weight: 900;
+  line-height: 1;
   flex-shrink: 0;
 }
+.ga-done-text {
+  font-size: var(--t-body);
+  font-weight: 700;
+  color: var(--ink);
+}
 
-.ga-dot-active { background: var(--accent); border-color: var(--accent); }
-.ga-dot-done   { background: var(--ink-4);  border-color: var(--hairline); }
-.ga-dot-rem    { background: var(--paper-2); border-color: var(--hairline); }
+/* ── Page footer ─────────────────────────────────────── */
+.ga-page-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-3) var(--space-5);
+  border-top: 1px solid var(--hairline);
+  background: var(--paper-2);
+  flex-wrap: wrap;
+}
+.ga-footer-map {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+.ga-footer-map-label {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 600;
+}
+.ga-footer-progress {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ga-footer-pieces {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+.ga-footer-pieces-label {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 600;
+}
+.ga-footer-pieces-count {
+  font-family: var(--font-mono);
+  font-size: var(--t-stat-m);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.ga-footer-pieces-unit {
+  font-size: var(--t-body-s);
+  color: var(--ink-3);
+  font-weight: 600;
+}
 
-/* ------------------------------------------------------------------- */
-/* Navigation — large tap targets, full-width on mobile               */
-/* ------------------------------------------------------------------- */
+/* Progress dots */
+.ga-dots {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.ga-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.ga-dot.is-done {
+  background: var(--ink-4);
+  border-color: var(--ink-4);
+}
+.ga-dot.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  width: 10px;
+  height: 10px;
+}
 
+/* Progress bar */
+.ga-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--hairline);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+.ga-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: var(--radius-pill);
+  transition: width 300ms var(--ease-out);
+}
+
+/* ── Navigation ──────────────────────────────────────── */
 .ga-nav {
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: var(--space-3);
   padding: var(--space-4) var(--space-5);
-  border-top: var(--rule-hair);
+  border-top: 1px solid var(--hairline);
+  background: var(--paper);
 }
-
-.ga-nav-prev,
-.ga-nav-next {
+.ga-nav-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   height: 3.5rem;
   font-size: var(--t-body);
-  font-weight: 700;
+  font-weight: 800;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-0);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+  background: transparent;
+  color: var(--ink);
+}
+.ga-nav-arrow:hover:not(:disabled) {
+  background: var(--paper-2);
+  transform: translateY(-1px);
+}
+.ga-nav-arrow:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.ga-nav-arrow-next {
+  background: var(--accent);
+  border-color: var(--ink);
+  color: var(--accent-ink);
+}
+.ga-nav-arrow-next:hover:not(:disabled) {
+  background: var(--accent-dark, #e6c200);
+  transform: translateY(-1px);
+}
+.ga-nav-arrow-next.is-done {
+  background: var(--lego-green, #009247);
+  border-color: var(--lego-green, #009247);
+  color: #fff;
+}
+.ga-nav-label {
   letter-spacing: 0.01em;
 }
 
-.ga-nav-prev {
-  /* inherits .btn defaults */
+/* ── Print styles ─────────────────────────────────────── */
+@media print {
+  .no-print,
+  .ga-controls,
+  .ga-nav { display: none !important; }
+
+  .ga-booklet {
+    border: none;
+    box-shadow: none;
+  }
+  .ga-page-header {
+    background: var(--ink) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .ga-page-body {
+    page-break-inside: avoid;
+  }
 }
 
-.ga-nav-next {
-  /* inherits .btn .btn-primary */
-}
-
-/* ------------------------------------------------------------------- */
-/* Responsive                                                          */
-/* ------------------------------------------------------------------- */
-
-@media (max-width: 600px) {
-  .ga-content {
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 700px) {
+  .ga-page-body {
     grid-template-columns: 1fr;
   }
-
-  /* On mobile show the map below the step card */
-  .ga-map-col {
-    flex-direction: row;
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-4);
-    justify-self: stretch;
-    justify-content: flex-start;
+  .ga-mosaic-panel {
+    order: -1; /* preview above instruction on mobile */
   }
-
-  .ga-map-legend {
-    grid-template-columns: auto auto auto auto auto auto;
-    align-self: flex-end;
-    padding-bottom: 2px;
+  .ga-instr-swatch {
+    width: 5rem;
+    height: 5rem;
   }
-
-  .ga-card-swatch {
-    width: 3rem;
-    height: 3rem;
+  .ga-controls {
+    padding: var(--space-3) var(--space-4);
   }
-
   .ga-nav {
     grid-template-columns: 1fr 1fr;
+    padding: var(--space-3) var(--space-4);
   }
-
-  .ga-nav-prev,
-  .ga-nav-next {
-    height: 4rem;
+  .ga-nav-arrow {
+    height: 3.75rem;
   }
+  .ga-page-footer {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+}
 
-  .ga-mode-menu {
-    min-width: calc(100vw - var(--space-6) * 2);
-    left: 0;
+@media (max-width: 480px) {
+  .ga-page-header {
+    padding: var(--space-3) var(--space-4);
+  }
+  .ga-page-body {
+    padding: var(--space-4);
+  }
+  .ga-instr-color,
+  .ga-instr-quarter,
+  .ga-instr-line {
+    flex-direction: column;
+  }
+  .ga-controls-left {
+    gap: var(--space-2);
   }
 }

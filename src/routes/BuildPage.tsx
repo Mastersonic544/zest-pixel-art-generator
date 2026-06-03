@@ -1,19 +1,13 @@
 /*
   BuildPage — /build/:shareId
   PRD §6.5 — chromeless, read-only, public (unlisted).
-
-  Sections:
-  - Minimal header: project name, unlisted tag, key meta.
-  - Two-column body: stats left, preview + assembly right.
-  - Play button enters guided assembly (GuidedAssembly component).
-    While active, MosaicPreview receives the current step's highlight set.
-  - The 3 mode toggles (Colored / Bricks / Code) are always available.
+  LEGO-inspired design: yellow accent bar, bold typography, instruction-booklet feel.
 */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { shareStorage } from "@/lib/shareStorage";
-import { MosaicPreview, MosaicStats } from "@/components/mosaic";
+import { MosaicPreview, ColorLegend } from "@/components/mosaic";
 import type { PreviewMode } from "@/components/mosaic";
 import GuidedAssembly from "@/components/assembly/GuidedAssembly";
 import type { Project } from "@/lib/types";
@@ -30,7 +24,7 @@ export default function BuildPage() {
   const [load, setLoad] = useState<LoadState>({ status: "loading" });
   const [mode, setMode] = useState<PreviewMode>("colored");
   const [playing, setPlaying] = useState(false);
-  const [highlightSet, setHighlightSet] = useState<ReadonlySet<number> | undefined>(undefined);
+  const [showBreakdown, setShowBreakdown] = useState(false);
 
   useEffect(() => {
     if (!shareId) { setLoad({ status: "not-found" }); return; }
@@ -47,29 +41,23 @@ export default function BuildPage() {
     return () => { cancelled = true; };
   }, [shareId]);
 
-  const handleHighlight = useCallback((active: ReadonlySet<number>) => {
-    setHighlightSet(active.size > 0 ? active : undefined);
-  }, []);
+  // No-op — GuidedAssembly requires the prop but outer preview is hidden during assembly
+  const handleHighlight = useCallback(() => {}, []);
 
-  const handlePlay = useCallback(() => {
-    setPlaying(true);
-    setHighlightSet(undefined);
-  }, []);
+  const handlePlay = useCallback(() => { setPlaying(true); }, []);
 
-  const handleClose = useCallback(() => {
-    setPlaying(false);
-    setHighlightSet(undefined);
-  }, []);
+  const handleClose = useCallback(() => { setPlaying(false); }, []);
 
   /* ---------------------------------------------------------------- */
-  /* Shell states                                                      */
+  /* Loading state                                                     */
   /* ---------------------------------------------------------------- */
 
   if (load.status === "loading") {
     return (
       <div className="bp-shell">
-        <div className="bp-container">
-          <p className="bp-loading">Loading build...</p>
+        <div className="bp-loading-wrap">
+          <div className="bp-loading-spinner" aria-hidden="true" />
+          <p className="bp-loading-text">Loading mosaic...</p>
         </div>
       </div>
     );
@@ -78,14 +66,13 @@ export default function BuildPage() {
   if (load.status === "not-found") {
     return (
       <div className="bp-shell">
-        <div className="bp-container">
-          <div className="bp-missing">
-            <p className="bp-missing-headline">Build not found.</p>
-            <p className="bp-missing-sub">
-              This link may have expired or the project was created in a
-              different browser. Ask the creator to reshare it.
-            </p>
-          </div>
+        <div className="bp-missing">
+          <span className="bp-missing-icon" aria-hidden="true">🧱</span>
+          <p className="bp-missing-headline">Build not found</p>
+          <p className="bp-missing-sub">
+            This link may have expired or the project was created in a different
+            browser. Ask the creator to reshare it.
+          </p>
         </div>
       </div>
     );
@@ -94,11 +81,10 @@ export default function BuildPage() {
   if (load.status === "error") {
     return (
       <div className="bp-shell">
-        <div className="bp-container">
-          <div className="bp-missing">
-            <p className="bp-missing-headline">Could not load build.</p>
-            <p className="bp-missing-sub">{load.message}</p>
-          </div>
+        <div className="bp-missing">
+          <span className="bp-missing-icon" aria-hidden="true">⚠️</span>
+          <p className="bp-missing-headline">Could not load build</p>
+          <p className="bp-missing-sub">{load.message}</p>
         </div>
       </div>
     );
@@ -110,110 +96,114 @@ export default function BuildPage() {
 
   const { project } = load;
 
-  return (
-    <div className="bp-shell">
-      <div className="bp-container">
-
-        {/* Header */}
-        <header className="bp-header">
-          <div className="bp-header-title-group">
-            <span className="bp-unlisted-tag">Unlisted build page</span>
-            <h1 className="bp-title">{project.name}</h1>
-          </div>
-          <div className="bp-header-meta">
-            <span className="bp-meta-pair">
-              <span className="bp-meta-label">Size</span>
-              <span className="num">{project.width} x {project.height}</span>
-            </span>
-            <span className="bp-meta-pair">
-              <span className="bp-meta-label">Pieces</span>
-              <span className="num">{(project.width * project.height).toLocaleString()}</span>
-            </span>
-            <span className="bp-meta-pair">
-              <span className="bp-meta-label">Baseplate</span>
-              <span style={{ textTransform: "capitalize" }}>{project.baseplate}</span>
-            </span>
+  if (playing) {
+    return (
+      <div className="bp-shell bp-shell-assembly">
+        <header className="bp-topbar">
+          <div className="bp-topbar-inner">
+            <span className="bp-brand">Zest</span>
+            <span className="bp-topbar-label">{project.name}</span>
+            <button className="btn btn-tiny bp-exit-btn" onClick={handleClose}>Exit</button>
           </div>
         </header>
+        <div className="bp-assembly-wrap">
+          <GuidedAssembly project={project} onHighlight={handleHighlight} onClose={handleClose} />
+        </div>
+      </div>
+    );
+  }
 
-        {/* Body */}
-        <div className="bp-body">
+  return <PreviewPage project={project} mode={mode} setMode={setMode} handlePlay={handlePlay} showBreakdown={showBreakdown} setShowBreakdown={setShowBreakdown} />;
+}
 
-          {/* Left: stats — hidden while guided assembly is open to give space */}
-          {!playing && (
-            <aside className="bp-stats-col">
-              <MosaicStats project={project} />
-            </aside>
-          )}
+/* ---------------------------------------------------------------- */
+/* Preview page (extracted to allow hooks at top level)            */
+/* ---------------------------------------------------------------- */
 
-          {/* Right: preview + guided assembly */}
-          <div className={`bp-preview-col${playing ? " bp-preview-col-wide" : ""}`}>
+function PreviewPage({
+  project,
+  mode,
+  setMode,
+  handlePlay,
+  showBreakdown,
+  setShowBreakdown,
+}: {
+  project: Project;
+  mode: PreviewMode;
+  setMode: (m: PreviewMode) => void;
+  handlePlay: () => void;
+  showBreakdown: boolean;
+  setShowBreakdown: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const totalPieces = project.width * project.height;
+  const distinctColors = useMemo(() => new Set(project.grid).size, [project.grid]);
 
-            {/* Mode toggle (always available per PRD §6.5) */}
-            <div className="bp-toolbar">
-              <div
-                className="segmented"
-                role="radiogroup"
-                aria-label="Preview mode"
-              >
-                {(["colored", "bricks", "code"] as PreviewMode[]).map((m) => (
-                  <button
-                    key={m}
-                    className={mode === m ? "is-active" : ""}
-                    onClick={() => setMode(m)}
-                    role="radio"
-                    aria-checked={mode === m}
-                    style={{ textTransform: "capitalize" }}
-                  >
-                    {m}
-                  </button>
-                ))}
-              </div>
-
-              {/* Play / close button */}
-              {!playing ? (
-                <button
-                  className="btn btn-accent"
-                  onClick={handlePlay}
-                >
-                  Play
-                </button>
-              ) : (
-                <button
-                  className="btn btn-ghost btn-tiny"
-                  onClick={handleClose}
-                >
-                  Exit guided mode
-                </button>
-              )}
+  return (
+    <div className="bp-shell">
+      <header className="bp-topbar">
+        <div className="bp-topbar-inner">
+          <span className="bp-brand">Zest</span>
+          <span className="bp-topbar-label">LEGO Mosaic Guide</span>
+        </div>
+      </header>
+      <main className="bp-main">
+        <div className="bp-container">
+          <div className="bp-identity">
+            <h1 className="bp-title">{project.name}</h1>
+            <div className="bp-chips">
+              <span className="bp-chip">{project.width} × {project.height}</span>
+              <span className="bp-chip">{totalPieces.toLocaleString()} pieces</span>
+              <span className="bp-chip">{distinctColors} colors</span>
+              <span className="bp-chip" style={{ textTransform: "capitalize" }}>{project.baseplate} baseplate</span>
             </div>
-
-            {/* Preview — receives highlight set during guided assembly */}
-            <MosaicPreview
-              project={project}
-              mode={mode}
-              size={480}
-              {...(highlightSet !== undefined ? { highlightSet } : {})}
-            />
-
-            {/* Guided assembly panel */}
-            {playing && (
-              <GuidedAssembly
-                project={project}
-                onHighlight={handleHighlight}
-                onClose={handleClose}
-              />
+          </div>
+          <div className="bp-preview-hero">
+            <MosaicPreview project={project} mode={mode} size={600} />
+          </div>
+          <div className="bp-mode-toggle">
+            <div className="segmented" role="radiogroup" aria-label="Preview mode">
+              {(["colored", "bricks", "code"] as PreviewMode[]).map((m) => (
+                <button
+                  key={m}
+                  className={mode === m ? "is-active" : ""}
+                  onClick={() => setMode(m)}
+                  role="radio"
+                  aria-checked={mode === m}
+                  style={{ textTransform: "capitalize" }}
+                >
+                  {m}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="bp-cta-section">
+            <button className="btn btn-primary bp-cta-btn" onClick={handlePlay}>
+              Start Building
+            </button>
+            <p className="bp-cta-hint">Step-by-step guided instructions</p>
+          </div>
+          <div className="bp-breakdown">
+            <button
+              className="bp-breakdown-toggle"
+              onClick={() => setShowBreakdown((s) => !s)}
+              aria-expanded={showBreakdown}
+            >
+              <span>Piece breakdown — {distinctColors} colors</span>
+              <span className={`bp-breakdown-arrow${showBreakdown ? " is-open" : ""}`} aria-hidden="true">▼</span>
+            </button>
+            {showBreakdown && (
+              <div className="bp-breakdown-body">
+                <ColorLegend project={project} onlyUsed sortBy="count-desc" />
+              </div>
             )}
           </div>
         </div>
-
-        <footer className="bp-foot">
-          <span className="bp-foot-note">
-            Unlisted page. Anyone with this URL can view it.
-          </span>
-        </footer>
-
-      </div>
+      </main>
+      <footer className="bp-foot">
+        <div className="bp-container">
+          <span className="bp-foot-note">Unlisted · Anyone with this link can view it</span>
+        </div>
+      </footer>
     </div>
   );
 }
