@@ -7,9 +7,10 @@
 .np-steps {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border-top: var(--rule-ink);
-  border-bottom: var(--rule-ink);
+  border: var(--w-thick) solid var(--hairline);
+  border-radius: var(--radius-1);
   margin-top: var(--space-6);
+  overflow: hidden;
 }
 
 .np-step-tab {
@@ -20,7 +21,7 @@
   padding: var(--space-4) var(--space-4);
   background: transparent;
   border: 0;
-  border-left: var(--rule-hair);
+  border-left: 1px solid var(--hairline);
   border-right: 0;
   cursor: default;
   text-align: left;
@@ -43,8 +44,8 @@
 }
 
 .np-step-tab.is-active {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--accent);
+  color: var(--accent-ink);
   cursor: default;
 }
 
@@ -95,7 +96,8 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-3);
-  border: var(--w-thick) dashed var(--hairline);
+  border: 3px dashed var(--hairline);
+  border-radius: var(--radius-1);
   padding: var(--space-10) var(--space-8);
   cursor: pointer;
   transition: border-color var(--dur-base) var(--ease-out),
@@ -302,13 +304,9 @@
   .np-steps {
     grid-template-columns: repeat(2, 1fr);
   }
-  .np-steps .np-step-tab:nth-child(2),
-  .np-steps .np-step-tab:nth-child(4) {
-    border-right: 0;
-  }
   .np-steps .np-step-tab:nth-child(3),
   .np-steps .np-step-tab:nth-child(4) {
-    border-top: var(--rule-hair);
+    border-top: 1px solid var(--hairline);
   }
 }
 
@@ -323,9 +321,32 @@
   }
   .np-steps .np-step-tab {
     border-left: 0;
-    border-top: var(--rule-hair);
+    border-top: 1px solid var(--hairline);
   }
   .np-steps .np-step-tab:first-child {
     border-top: 0;
+  }
+
+  .np-upload-zone {
+    padding: var(--space-8) var(--space-4);
+  }
+
+  .np-finish-form {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .np-body {
+    padding: var(--space-5) 0 var(--space-6);
+  }
+
+  .np-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .np-actions .btn {
+    width: 100%;
   }
 }

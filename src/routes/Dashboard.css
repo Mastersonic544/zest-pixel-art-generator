@@ -1,9 +1,4 @@
-/*
-  Dashboard styles — /
-  PRD §6.1, §10.
-  No shadows. No rounded cards. Structure through spacing, hairlines,
-  and tonal blocks. Mosaic thumbnail is the loudest thing in each row.
-*/
+/* Dashboard styles — LEGO design system */
 
 /* ------------------------------------------------------------------- */
 /* Top nav                                                             */
@@ -11,11 +6,23 @@
 
 .db-nav {
   display: flex;
-  align-items: flex-end;
-  gap: var(--space-5);
-  font-family: var(--font-mono);
+  align-items: center;
+  gap: var(--space-4);
   font-size: var(--t-body-s);
-  padding-bottom: 3px; /* align baseline with masthead title */
+  font-weight: 700;
+}
+
+.db-nav a {
+  color: var(--ink-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-0);
+  transition: background var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+
+.db-nav a:hover {
+  background: var(--paper-2);
+  color: var(--ink);
 }
 
 /* ------------------------------------------------------------------- */
@@ -25,21 +32,19 @@
 .db-kpis {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border-bottom: var(--rule-ink);
-  /* Top rule is the masthead's border-bottom */
+  gap: var(--space-4);
+  padding: var(--space-6) 0;
+  border-bottom: var(--rule-hair);
 }
 
 .db-kpi {
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: var(--space-2);
-  padding: var(--space-6) var(--space-5) var(--space-5);
-  border-left: var(--rule-hair);
-}
-
-.db-kpi:first-child {
-  border-left: 0;
-  padding-left: 0;
+  padding: var(--space-5);
+  background: var(--paper-2);
+  border-radius: var(--radius-1);
+  border: var(--w-hair) solid var(--hairline);
 }
 
 .db-kpi-eyebrow {
@@ -48,7 +53,7 @@
   letter-spacing: var(--ls-caps);
   text-transform: uppercase;
   color: var(--ink-3);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .db-kpi-figure {
@@ -57,18 +62,16 @@
   font-size: var(--t-stat-xl);
   line-height: 1;
   letter-spacing: -0.02em;
-  font-weight: 500;
+  font-weight: 700;
   color: var(--ink);
-  /* Align to a shared baseline across all KPIs */
   align-self: end;
   padding-bottom: var(--space-1);
 }
 
-/* Color KPI has a chip + name instead of a pure numeral */
 .db-kpi-figure-color {
   font-family: var(--font-sans);
   font-size: var(--t-h2);
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: var(--ls-h);
   display: flex;
   align-items: center;
@@ -86,13 +89,15 @@
   width: 1.5rem;
   height: 1.5rem;
   flex-shrink: 0;
-  border: var(--rule-hair);
+  border-radius: var(--radius-pill);
+  border: 2px solid rgba(28,28,27,0.15);
 }
 
 .db-kpi-supp {
   font-size: var(--t-body-s);
   color: var(--ink-3);
   line-height: var(--lh-body);
+  font-weight: 500;
 }
 
 .db-kpi-supp-mono {
@@ -104,7 +109,6 @@
 
 /* ------------------------------------------------------------------- */
 /* New project row                                                     */
-/* Deliberate, full-width affordance — not a tiny button in a corner. */
 /* ------------------------------------------------------------------- */
 
 .db-new-row {
@@ -112,8 +116,11 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-6);
-  padding: var(--space-5) 0;
-  border-bottom: var(--rule-ink);
+  padding: var(--space-5) var(--space-5);
+  margin: var(--space-5) 0;
+  background: var(--accent-faint);
+  border: var(--w-thick) solid var(--accent);
+  border-radius: var(--radius-1);
 }
 
 .db-new-copy {
@@ -124,22 +131,23 @@
 .db-new-label {
   font-family: var(--font-sans);
   font-size: var(--t-h3);
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: var(--ls-h);
   color: var(--ink);
 }
 
 .db-new-sub {
   font-size: var(--t-body-s);
-  color: var(--ink-3);
+  color: var(--ink-2);
+  font-weight: 500;
 }
 
 .db-new-btn {
   height: 3rem;
   padding: 0 var(--space-7);
   font-size: var(--t-body);
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-weight: 800;
+  letter-spacing: 0.01em;
   flex-shrink: 0;
 }
 
@@ -159,11 +167,10 @@
   letter-spacing: var(--ls-caps);
   text-transform: uppercase;
   color: var(--ink-3);
+  font-weight: 600;
 }
 
-/* Skip the thumbnail column label (it's the first) — blank header */
 .db-list-head span:first-child {
-  /* no content, but grid space reserved */
   visibility: hidden;
 }
 
@@ -182,7 +189,6 @@
 }
 
 .db-row {
-  /* Reset button defaults */
   width: 100%;
   background: none;
   border: 0;
@@ -195,6 +201,7 @@
   align-items: center;
   gap: var(--space-4);
   padding: var(--space-3) var(--space-3);
+  border-radius: var(--radius-0);
   transition: background var(--dur-fast) var(--ease-out);
 }
 
@@ -204,7 +211,7 @@
 
 .db-row:focus-visible {
   outline: none;
-  box-shadow: inset 0 0 0 2px var(--ink);
+  box-shadow: var(--focus-ring);
 }
 
 /* Thumbnail */
@@ -212,7 +219,8 @@
   width: 3rem;
   height: 3rem;
   flex-shrink: 0;
-  border: var(--rule-hair);
+  border-radius: var(--radius-0);
+  border: 2px solid var(--hairline);
   overflow: hidden;
   background: var(--paper-2);
 }
@@ -239,7 +247,7 @@
 
 .db-row-title {
   font-size: var(--t-body);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
@@ -264,29 +272,28 @@
 /* Badges */
 .db-badge {
   display: inline-block;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: var(--t-caption);
+  font-weight: 700;
   letter-spacing: var(--ls-caps);
   text-transform: uppercase;
-  padding: 2px 6px;
-  border: 1px solid;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
 }
 
 .db-badge-shared {
-  color: var(--ink);
-  border-color: var(--ink);
   background: var(--ink);
   color: var(--paper);
 }
 
 .db-badge-private {
   color: var(--ink-4);
-  border-color: var(--hairline);
+  background: var(--paper-2);
+  border: 1px solid var(--hairline);
 }
 
 /* ------------------------------------------------------------------- */
 /* Empty state                                                         */
-/* No emojis. No generic card. Structure through the grid motif.      */
 /* ------------------------------------------------------------------- */
 
 .db-empty {
@@ -298,24 +305,27 @@
   border-bottom: var(--rule-hair);
 }
 
-/* A faint 8x8 placeholder grid echoing the mosaic metaphor */
+/* LEGO stud pattern — circles on a grid */
 .db-empty-grid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  gap: 3px;
+  gap: 6px;
   max-width: 18rem;
   justify-self: end;
-  opacity: 0.18;
+  opacity: 0.22;
 }
 
 .db-empty-cell {
   aspect-ratio: 1;
-  background: var(--ink);
+  background: radial-gradient(circle at 50% 40%, var(--ink-3) 38%, transparent 39%),
+              var(--ink-4);
+  border-radius: 3px;
 }
 
-/* Every other cell slightly lighter to suggest a pattern */
 .db-empty-cell:nth-child(2n) {
-  background: var(--ink-3);
+  background: radial-gradient(circle at 50% 40%, var(--ink-4) 38%, transparent 39%),
+              var(--hairline);
+  border-radius: 3px;
 }
 
 .db-empty-body {
@@ -327,7 +337,7 @@
 .db-empty-headline {
   font-family: var(--font-sans);
   font-size: var(--t-h1);
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: var(--ls-h);
   color: var(--ink);
   line-height: var(--lh-h1);
@@ -338,6 +348,7 @@
   font-size: var(--t-body);
   color: var(--ink-2);
   line-height: var(--lh-body);
+  font-weight: 500;
 }
 
 /* ------------------------------------------------------------------- */
@@ -361,44 +372,25 @@
   .db-kpis {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  .db-kpi:nth-child(2) {
-    border-left: var(--rule-hair);
-  }
-
-  .db-kpi:nth-child(3) {
-    border-left: 0;
-    padding-left: 0;
-    border-top: var(--rule-hair);
-  }
-
-  .db-kpi:nth-child(4) {
-    border-top: var(--rule-hair);
-  }
 }
 
 @media (max-width: 680px) {
   .db-kpis {
     grid-template-columns: 1fr;
-  }
-
-  .db-kpi {
-    border-left: 0;
-    padding-left: 0;
-    border-top: var(--rule-hair);
-  }
-
-  .db-kpi:first-child {
-    border-top: 0;
+    gap: var(--space-3);
+    padding: var(--space-4) 0;
   }
 
   .db-list-head,
   .db-row {
-    grid-template-columns: 3rem 1fr 5rem 5rem;
+    grid-template-columns: 3rem 1fr 5rem;
   }
 
-  /* Hide the shared status column on very narrow screens */
+  /* Hide size and shared columns on mobile */
+  .db-list-head span:nth-child(3),
+  .db-list-head span:nth-child(4),
   .db-list-head span:last-child,
+  .db-row > span.db-row-size,
   .db-row > span:last-child {
     display: none;
   }
@@ -409,5 +401,30 @@
 
   .db-empty-grid {
     justify-self: start;
+    max-width: 14rem;
+  }
+
+  .db-new-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .db-new-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .db-list-head,
+  .db-row {
+    grid-template-columns: 2.5rem 1fr;
+  }
+
+  .db-list-head span:nth-child(3),
+  .db-row > span:nth-child(3),
+  .db-row > span:nth-child(4),
+  .db-row > span:nth-child(5) {
+    display: none;
   }
 }

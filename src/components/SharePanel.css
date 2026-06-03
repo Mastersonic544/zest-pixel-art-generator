@@ -21,7 +21,8 @@
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   background: var(--paper-2);
-  border-left: var(--w-thick) solid var(--ink);
+  border-left: var(--w-thick) solid var(--accent);
+  border-radius: 0 var(--radius-0) var(--radius-0) 0;
   font-size: var(--t-body-s);
   color: var(--ink-2);
   line-height: var(--lh-body);
@@ -111,7 +112,9 @@
   display: flex;
   align-items: stretch;
   gap: 0;
-  border: var(--rule-ink);
+  border: var(--w-thick) solid var(--hairline);
+  border-radius: var(--radius-0);
+  overflow: hidden;
 }
 
 .sp-url-input {
@@ -132,12 +135,14 @@
 }
 
 .sp-copy-btn {
-  /* Flush against the right edge of the bordered row */
   border: 0;
-  border-left: var(--rule-ink);
+  border-left: var(--w-thick) solid var(--hairline);
   height: 2.5rem;
   padding: 0 var(--space-4);
   flex-shrink: 0;
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--accent-ink);
 }
 
 .sp-qr-block {
@@ -148,9 +153,11 @@
 
 .sp-qr-frame {
   flex-shrink: 0;
-  border: var(--rule-ink);
+  border: var(--w-thick) solid var(--hairline);
+  border-radius: var(--radius-0);
   line-height: 0;
   background: var(--paper);
+  overflow: hidden;
 }
 
 .sp-qr-img {

@@ -46,8 +46,9 @@
 /* Palette table ----------------------------------------------------- */
 
 .sx-table {
-  border-top: var(--rule-ink);
-  border-bottom: var(--rule-ink);
+  border-top: var(--rule-hair);
+  border-bottom: var(--rule-hair);
+  border-radius: var(--radius-0);
 }
 
 /* Column template: id | swatch | name | hex | LEGO id | part hint | move | move | remove */
@@ -126,7 +127,7 @@
 .sx-foot {
   margin-top: var(--space-7);
   padding-top: var(--space-5);
-  border-top: var(--rule-ink);
+  border-top: var(--rule-hair);
   display: flex;
   align-items: baseline;
   justify-content: space-between;

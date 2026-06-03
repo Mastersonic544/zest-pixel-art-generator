@@ -1,105 +1,94 @@
 /*
-  Zest design tokens.
-  Pro-instrument minimalism. Swiss editorial precision.
-  Grid is sacred. Mosaic is the loudest thing on screen.
+  Zest design tokens — LEGO design system.
+  Bold. Playful. Yellow.
 */
 
 :root {
   /* ------------------------------------------------------------------ */
   /* Type families                                                       */
-  /* Archivo: characterful grotesque, used for all UI sans.              */
-  /* JetBrains Mono: precise, slashed zeros, used for stats + code mode. */
+  /* Nunito: rounded geometric sans, close to LEGO's proprietary Cera.  */
+  /* JetBrains Mono: precise numerals for stats + code mode.            */
   /* ------------------------------------------------------------------ */
-  --font-sans: "Archivo", ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: "Nunito", ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   /* ------------------------------------------------------------------ */
-  /* Type scale (deliberate, not the generic 16/18/20 ladder).           */
-  /* Stepped on a ~1.25 ratio, with custom display sizes at the top.     */
+  /* Type scale                                                          */
   /* ------------------------------------------------------------------ */
-  --t-display-xl: 4.5rem;     /* 72px - dashboard hero */
-  --t-display-l: 3.5rem;      /* 56px */
-  --t-display-m: 2.5rem;      /* 40px - page title */
-  --t-h1: 1.75rem;            /* 28px */
-  --t-h2: 1.375rem;           /* 22px */
-  --t-h3: 1.125rem;           /* 18px */
-  --t-body-l: 1.0625rem;      /* 17px */
-  --t-body: 0.9375rem;        /* 15px - default body, not 16 */
-  --t-body-s: 0.8125rem;      /* 13px */
-  --t-caption: 0.6875rem;     /* 11px - micro labels */
+  --t-display-xl: 4.5rem;
+  --t-display-l: 3.5rem;
+  --t-display-m: 2.5rem;
+  --t-h1: 1.75rem;
+  --t-h2: 1.375rem;
+  --t-h3: 1.125rem;
+  --t-body-l: 1.0625rem;
+  --t-body: 0.9375rem;
+  --t-body-s: 0.8125rem;
+  --t-caption: 0.6875rem;
 
-  /* Line heights tuned per scale; tight at the top, looser for reading. */
-  --lh-display: 0.95;
-  --lh-h1: 1.1;
+  --lh-display: 1.0;
+  --lh-h1: 1.15;
   --lh-h2: 1.2;
   --lh-h3: 1.3;
-  --lh-body: 1.5;
-  --lh-tight: 1.15;
+  --lh-body: 1.6;
+  --lh-tight: 1.2;
 
-  /* Letter spacing. Negative at display, positive on micro caps. */
-  --ls-display: -0.02em;
-  --ls-h: -0.01em;
+  --ls-display: -0.01em;
+  --ls-h: 0em;
   --ls-body: 0em;
-  --ls-caps: 0.08em;
+  --ls-caps: 0.06em;
 
-  /* Mono-specific stat sizes for "instrument" numerals. */
-  --t-stat-xl: 3.5rem;        /* 56px */
-  --t-stat-l: 2.5rem;         /* 40px */
-  --t-stat-m: 1.5rem;         /* 24px */
-  --t-stat-s: 1rem;           /* 16px */
+  /* Mono stat sizes */
+  --t-stat-xl: 3.5rem;
+  --t-stat-l: 2.5rem;
+  --t-stat-m: 1.5rem;
+  --t-stat-s: 1rem;
 
   /* ------------------------------------------------------------------ */
-  /* Spacing scale. 4px base, with sparse increments at the top end.     */
+  /* Spacing — 4px base                                                  */
   /* ------------------------------------------------------------------ */
   --space-0: 0;
-  --space-1: 0.25rem;         /* 4 */
-  --space-2: 0.5rem;          /* 8 */
-  --space-3: 0.75rem;         /* 12 */
-  --space-4: 1rem;            /* 16 */
-  --space-5: 1.5rem;          /* 24 */
-  --space-6: 2rem;            /* 32 */
-  --space-7: 3rem;            /* 48 */
-  --space-8: 4rem;            /* 64 */
-  --space-9: 6rem;            /* 96 */
-  --space-10: 8rem;           /* 128 - major section breaks */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
 
   /* ------------------------------------------------------------------ */
-  /* Color. Restrained, warm near-neutral chrome.                        */
-  /* The artwork supplies the color. The UI does not compete.            */
+  /* Color — LEGO brand palette                                          */
   /* ------------------------------------------------------------------ */
-  --paper: #f4f2ec;           /* warm off-white background */
-  --paper-2: #ebe8e0;         /* slightly recessed surface */
-  --surface: #ffffff;         /* pure white, used sparingly */
+  --paper: #ffffff;
+  --paper-2: #f5f5f5;
+  --surface: #ffffff;
 
-  --ink: #0a0a08;             /* near-black text */
-  --ink-2: #3a3a36;           /* secondary text */
-  --ink-3: #76746d;           /* tertiary, captions, helper */
-  --ink-4: #a8a59c;           /* faintest, dividers within mono blocks */
+  --ink: #1c1c1b;
+  --ink-2: #3d3d3b;
+  --ink-3: #717171;
+  --ink-4: #ababab;
 
-  --hairline: #d8d4c8;        /* primary 1px rule */
-  --hairline-2: #e6e2d6;      /* softer separator */
+  --hairline: #e0e0e0;
+  --hairline-2: #eeeeee;
 
-  /* Single accent: a zest citrus, used sparingly for focus + primary CTA. */
-  --accent: #ff5a1f;
-  --accent-ink: #ffffff;
-  --accent-faint: #ffe9dc;
+  /* LEGO brand yellow — primary accent */
+  --accent: #ffd700;
+  --accent-ink: #1c1c1b;
+  --accent-faint: #fff8d6;
+  --accent-dark: #e6c200;
 
-  /* Status colors, used only where signal is required. */
-  --warn: #c7762a;            /* low-count color flag */
-  --warn-faint: #f6e6cf;
+  /* LEGO brand colors */
+  --lego-red: #da291c;
+  --lego-blue: #006db7;
+  --lego-green: #009247;
+  --lego-orange: #f47920;
 
-  /* ------------------------------------------------------------------ */
-  /* Line weights. The grid is drawn with hairlines, not shadows.        */
-  /* ------------------------------------------------------------------ */
-  --w-hair: 1px;
-  --w-thin: 1.5px;
-  --w-thick: 2px;
-  --w-heavy: 3px;
-
-  --rule-hair: var(--w-hair) solid var(--hairline);
-  --rule-soft: var(--w-hair) solid var(--hairline-2);
-  --rule-ink: var(--w-hair) solid var(--ink);
-  --rule-thick: var(--w-thick) solid var(--ink);
+  /* Warn uses LEGO red */
+  --warn: #da291c;
+  --warn-faint: #fdedec;
 
   /* ------------------------------------------------------------------ */
   /* Layout                                                              */
@@ -107,12 +96,30 @@
   --container: 1280px;
   --gutter: var(--space-6);
 
-  /* Radii. Mostly 0 (square). One small radius reserved for tactile UI. */
-  --radius-0: 0;
-  --radius-1: 2px;
+  /* Radii — LEGO uses rounded corners throughout */
+  --radius-0: 8px;
+  --radius-1: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
 
-  /* Focus ring: a precise outer ring, never a glow. */
-  --focus-ring: 0 0 0 2px var(--paper), 0 0 0 3px var(--ink);
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(28, 28, 27, 0.08);
+  --shadow-md: 0 4px 12px rgba(28, 28, 27, 0.10);
+  --shadow-card: 0 2px 8px rgba(28, 28, 27, 0.08), 0 0 0 1px rgba(28, 28, 27, 0.06);
+
+  /* Line weights */
+  --w-hair: 1px;
+  --w-thin: 1.5px;
+  --w-thick: 2px;
+  --w-heavy: 3px;
+
+  --rule-hair: var(--w-hair) solid var(--hairline);
+  --rule-soft: var(--w-hair) solid var(--hairline-2);
+  --rule-ink: var(--w-thick) solid var(--ink);
+  --rule-thick: 3px solid var(--ink);
+
+  /* Focus ring — yellow glow, LEGO style */
+  --focus-ring: 0 0 0 2px var(--paper), 0 0 0 4px var(--accent);
 
   /* Motion */
   --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);

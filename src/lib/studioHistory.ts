@@ -5,7 +5,7 @@
   a single snapshot is ~9 KB. Capping at MAX_DEPTH keeps memory bounded.
 */
 
-const MAX_DEPTH = 64;
+const MAX_DEPTH = 50;
 
 export type HistoryStack = {
   undoStack: number[][];

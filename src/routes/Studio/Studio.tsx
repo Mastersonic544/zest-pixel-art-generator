@@ -24,7 +24,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useProjects } from "@/store/projects";
 import { MosaicStats } from "@/components/mosaic";
-import { applyMerge } from "@/lib/simplify";
+import { applyMerge, applyMerges } from "@/lib/simplify";
 import {
   emptyHistory,
   pushUndo,
@@ -141,6 +141,14 @@ export default function Studio() {
       handleMerge(fromId, toId);
     },
     [handleMerge]
+  );
+
+  const handleSimplifyApproveAll = useCallback(
+    (merges: { fromId: number; toId: number }[]) => {
+      const newGrid = applyMerges(gridRef.current, merges);
+      commitGrid(newGrid);
+    },
+    [commitGrid]
   );
 
   /* ------------------------------------------------------------------ */
@@ -347,6 +355,7 @@ export default function Studio() {
                 grid={grid}
                 palette={project.paletteSnapshot}
                 onApprove={handleSimplifyApprove}
+                onApproveAll={handleSimplifyApproveAll}
               />
             )}
           </div>

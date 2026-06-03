@@ -1,6 +1,7 @@
 /*
-  Guided assembly panel and mini-map.
-  No shadows, no rounded cards. Grid, hairlines, mono numerals.
+  Assembly guide — GuidedAssembly + MiniMap.
+  Builder-first layout: the current step is the hero.
+  Large tap targets for Prev / Next. Fully responsive.
 */
 
 /* ------------------------------------------------------------------- */
@@ -15,18 +16,23 @@
 }
 
 /* ------------------------------------------------------------------- */
-/* GuidedAssembly container                                           */
+/* Container                                                           */
 /* ------------------------------------------------------------------- */
 
 .ga {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 0;
-  border-top: var(--rule-ink);
-  border-bottom: var(--rule-ink);
+  margin-top: var(--space-5);
+  background: var(--surface);
+  border: var(--w-thick) solid var(--hairline);
+  border-radius: var(--radius-1);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
 }
 
 /* ------------------------------------------------------------------- */
-/* Top bar: mode selector + exit                                       */
+/* Top bar: mode switcher + exit                                       */
 /* ------------------------------------------------------------------- */
 
 .ga-topbar {
@@ -34,160 +40,291 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  padding: var(--space-4) 0;
+  padding: var(--space-3) var(--space-5);
+  border-bottom: var(--rule-hair);
+  background: var(--paper-2);
+}
+
+/* Mode switcher — a button that opens a dropdown */
+.ga-mode-switcher {
+  position: relative;
+}
+
+.ga-mode-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: none;
+  border: var(--rule-hair);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: var(--t-body-s);
+  font-weight: 600;
+  color: var(--ink);
+  transition: background var(--dur-fast) var(--ease-out);
+}
+
+.ga-mode-btn:hover {
+  background: var(--paper);
+}
+
+.ga-mode-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.ga-mode-current {
+  color: var(--ink);
+}
+
+.ga-mode-caret {
+  font-size: 0.5rem;
+  color: var(--ink-3);
+  line-height: 1;
+}
+
+/* Dropdown */
+.ga-mode-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: var(--rule-ink);
+  min-width: 16rem;
+}
+
+.ga-mode-option {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  background: none;
+  border: 0;
+  border-bottom: var(--rule-hair);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+
+.ga-mode-option:last-child {
+  border-bottom: 0;
+}
+
+.ga-mode-option:hover {
+  background: var(--paper-2);
+}
+
+.ga-mode-option.is-active {
+  background: var(--paper-2);
+}
+
+.ga-mode-option:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.ga-mode-option-label {
+  font-family: var(--font-sans);
+  font-size: var(--t-body-s);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ga-mode-option-hint {
+  font-family: var(--font-sans);
+  font-size: var(--t-caption);
+  color: var(--ink-3);
+  line-height: 1.4;
+}
+
+/* ------------------------------------------------------------------- */
+/* Progress bar                                                        */
+/* ------------------------------------------------------------------- */
+
+.ga-progress-track {
+  height: 4px;
+  background: var(--hairline);
+  position: relative;
+  overflow: hidden;
+}
+
+.ga-progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--accent);
+  transition: width 300ms var(--ease-out);
+}
+
+/* ------------------------------------------------------------------- */
+/* Step counter row                                                    */
+/* ------------------------------------------------------------------- */
+
+.ga-counter-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
   border-bottom: var(--rule-hair);
 }
 
-/* ------------------------------------------------------------------- */
-/* Main row                                                            */
-/* ------------------------------------------------------------------- */
-
-.ga-main {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: var(--space-6);
-  align-items: start;
-  padding: var(--space-5) 0;
-}
-
-/* ------------------------------------------------------------------- */
-/* Mini-map                                                            */
-/* ------------------------------------------------------------------- */
-
-.ga-minimap-wrap {
-  display: grid;
-  gap: var(--space-2);
-  align-content: start;
-}
-
-.ga-minimap-label {
-  display: block;
-}
-
-.ga-minimap-legend {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-family: var(--font-mono);
-  font-size: var(--t-caption);
-  color: var(--ink-3);
-  flex-wrap: wrap;
-}
-
-.ga-legend-dot {
-  display: inline-block;
-  width: 0.625rem;
-  height: 0.625rem;
-  border: var(--rule-hair);
-  flex-shrink: 0;
-}
-
-.ga-legend-dot-active {
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.ga-legend-dot-done {
-  background: var(--ink-4);
-  border-color: var(--hairline);
-}
-
-.ga-legend-dot-rem {
-  background: var(--paper-2);
-  border-color: var(--hairline);
-}
-
-/* ------------------------------------------------------------------- */
-/* Step detail                                                         */
-/* ------------------------------------------------------------------- */
-
-.ga-detail {
-  display: grid;
-  gap: var(--space-4);
-  align-content: start;
-}
-
-.ga-step-label {
-  font-family: var(--font-mono);
-  font-size: var(--t-caption);
-  letter-spacing: var(--ls-caps);
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-
-/* By-color detail */
-.ga-color-detail {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-
-.ga-color-chip {
-  display: block;
-  width: 3rem;
-  height: 3rem;
-  flex-shrink: 0;
-  border: var(--rule-ink);
-}
-
-.ga-color-text {
-  display: grid;
-  gap: var(--space-2);
-}
-
-.ga-color-name {
-  font-family: var(--font-sans);
-  font-size: var(--t-h3);
-  font-weight: 700;
-  letter-spacing: var(--ls-h);
-  color: var(--ink);
-}
-
-.ga-color-meta {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.ga-bag-badge {
-  font-family: var(--font-mono);
-  font-size: var(--t-caption);
-  letter-spacing: var(--ls-caps);
-  text-transform: uppercase;
-  padding: 2px 6px;
-  border: var(--rule-ink);
-  color: var(--ink);
-  background: var(--paper-2);
-}
-
-.ga-piece-count {
+.ga-counter-text {
   font-family: var(--font-mono);
   font-size: var(--t-body-s);
-  color: var(--ink-2);
-  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
 }
 
-/* By-quarter detail */
-.ga-quarter-detail {
+.ga-counter-num {
+  font-size: var(--t-body);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ga-counter-sep {
+  color: var(--ink-4);
+}
+
+.ga-counter-total {
+  color: var(--ink-3);
+}
+
+.ga-done-badge {
+  font-family: var(--font-sans);
+  font-size: var(--t-caption);
+  font-weight: 800;
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: var(--accent);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+
+/* ------------------------------------------------------------------- */
+/* Main content: step card + mini-map                                 */
+/* ------------------------------------------------------------------- */
+
+.ga-content {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-5);
+  align-items: start;
+  padding: var(--space-5) var(--space-5);
+}
+
+/* ------------------------------------------------------------------- */
+/* Step card                                                           */
+/* ------------------------------------------------------------------- */
+
+.ga-step-card {
+  /* fills the left column */
+}
+
+.ga-card-eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: var(--space-3);
+}
+
+.ga-card-name {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: var(--t-h1);
+  font-weight: 800;
+  letter-spacing: var(--ls-h);
+  color: var(--ink);
+  line-height: var(--lh-h1);
+  margin-bottom: var(--space-3);
+}
+
+.ga-card-instruction {
+  font-size: var(--t-body);
+  color: var(--ink-2);
+  line-height: var(--lh-body);
+  margin: var(--space-3) 0 0;
+  max-width: 40ch;
+}
+
+.ga-card-instruction strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Tags: Bag number + piece count */
+.ga-card-tags {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-2);
+}
+
+.ga-tag {
+  font-family: var(--font-sans);
+  font-size: var(--t-body-s);
+  font-weight: 700;
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  padding: var(--space-1) var(--space-3);
+  border: var(--w-thick) solid var(--ink);
+  border-radius: var(--radius-pill);
+  color: var(--ink);
+  background: var(--paper-2);
+  white-space: nowrap;
+}
+
+.ga-tag-count {
+  border-color: var(--hairline);
+  background: transparent;
+  color: var(--ink-2);
+}
+
+/* Color step: large swatch + name side by side */
+.ga-card-color {
   display: grid;
   gap: var(--space-3);
 }
 
-.ga-quarter-name {
-  font-family: var(--font-sans);
-  font-size: var(--t-h3);
-  font-weight: 700;
-  letter-spacing: var(--ls-h);
-  color: var(--ink);
+.ga-card-color-main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.ga-card-swatch {
+  display: block;
+  width: 4rem;
+  height: 4rem;
+  flex-shrink: 0;
+  border: var(--w-thick) solid rgba(28,28,27,0.15);
+  border-radius: var(--radius-0);
+  box-shadow: var(--shadow-sm);
+}
+
+.ga-card-color-info {
+  display: grid;
+  gap: var(--space-2);
+}
+
+/* Quarter step */
+.ga-card-quarter {
+  display: grid;
+  gap: var(--space-3);
 }
 
 /* 2x2 quadrant diagram */
-.ga-quad-diagram {
+.ga-quad {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 3px;
-  width: 2.5rem;
-  height: 2.5rem;
+  gap: 4px;
+  width: 3.5rem;
+  height: 3.5rem;
 }
 
 .ga-quad-cell {
@@ -200,128 +337,121 @@
   border-color: var(--accent);
 }
 
-/* By-line detail */
-.ga-line-detail {
+/* Line step */
+.ga-card-line {
   display: grid;
-  gap: var(--space-2);
-}
-
-.ga-line-name {
-  font-family: var(--font-sans);
-  font-size: var(--t-h3);
-  font-weight: 700;
-  letter-spacing: var(--ls-h);
-  color: var(--ink);
+  gap: var(--space-3);
 }
 
 /* ------------------------------------------------------------------- */
-/* Navigation                                                          */
+/* Mini-map column                                                     */
+/* ------------------------------------------------------------------- */
+
+.ga-map-col {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+  justify-items: center;
+}
+
+.ga-map-label {
+  justify-self: start;
+}
+
+/* Legend */
+.ga-map-legend {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: var(--space-2);
+  row-gap: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  color: var(--ink-3);
+  justify-self: start;
+}
+
+.ga-dot {
+  display: inline-block;
+  width: 0.625rem;
+  height: 0.625rem;
+  border: var(--rule-hair);
+  flex-shrink: 0;
+}
+
+.ga-dot-active { background: var(--accent); border-color: var(--accent); }
+.ga-dot-done   { background: var(--ink-4);  border-color: var(--hairline); }
+.ga-dot-rem    { background: var(--paper-2); border-color: var(--hairline); }
+
+/* ------------------------------------------------------------------- */
+/* Navigation — large tap targets, full-width on mobile               */
 /* ------------------------------------------------------------------- */
 
 .ga-nav {
   display: grid;
-  grid-template-rows: auto auto auto;
-  align-items: center;
-  justify-items: center;
+  grid-template-columns: 1fr 2fr;
   gap: var(--space-3);
-  align-content: start;
-  padding-top: var(--space-1);
+  padding: var(--space-4) var(--space-5);
+  border-top: var(--rule-hair);
 }
 
-.ga-nav-btn {
-  width: 5rem;
+.ga-nav-prev,
+.ga-nav-next {
+  height: 3.5rem;
+  font-size: var(--t-body);
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
-.ga-step-counter {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums slashed-zero;
+.ga-nav-prev {
+  /* inherits .btn defaults */
 }
 
-.ga-step-num {
-  font-size: var(--t-stat-m);
-  font-weight: 500;
-  color: var(--ink);
-  line-height: 1;
-}
-
-.ga-step-sep {
-  font-size: var(--t-body-s);
-  color: var(--ink-4);
-}
-
-.ga-step-total {
-  font-size: var(--t-body-s);
-  color: var(--ink-3);
-}
-
-/* ------------------------------------------------------------------- */
-/* Progress bar                                                        */
-/* ------------------------------------------------------------------- */
-
-.ga-progress {
-  height: 3px;
-  background: var(--hairline);
-  position: relative;
-  overflow: hidden;
-}
-
-.ga-progress-fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  background: var(--ink);
-  transition: width var(--dur-base) var(--ease-out);
+.ga-nav-next {
+  /* inherits .btn .btn-primary */
 }
 
 /* ------------------------------------------------------------------- */
 /* Responsive                                                          */
 /* ------------------------------------------------------------------- */
 
-@media (max-width: 720px) {
-  .ga-main {
+@media (max-width: 600px) {
+  .ga-content {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
   }
 
-  .ga-minimap-wrap {
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
-    column-gap: var(--space-4);
-    align-items: start;
-  }
-
-  .ga-minimap-label {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .mm-canvas {
-    grid-column: 1;
-    grid-row: 2;
-  }
-
-  .ga-minimap-legend {
-    grid-column: 2;
-    grid-row: 1 / 3;
-    align-content: start;
-    flex-direction: column;
+  /* On mobile show the map below the step card */
+  .ga-map-col {
+    flex-direction: row;
+    display: flex;
     align-items: flex-start;
+    gap: var(--space-4);
+    justify-self: stretch;
+    justify-content: flex-start;
+  }
+
+  .ga-map-legend {
+    grid-template-columns: auto auto auto auto auto auto;
+    align-self: flex-end;
+    padding-bottom: 2px;
+  }
+
+  .ga-card-swatch {
+    width: 3rem;
+    height: 3rem;
   }
 
   .ga-nav {
-    grid-template-columns: auto 1fr auto;
-    grid-template-rows: auto;
-    gap: var(--space-3);
-    justify-items: start;
+    grid-template-columns: 1fr 1fr;
   }
 
-  .ga-step-counter {
-    justify-self: center;
+  .ga-nav-prev,
+  .ga-nav-next {
+    height: 4rem;
   }
 
-  .ga-nav-btn {
-    width: auto;
+  .ga-mode-menu {
+    min-width: calc(100vw - var(--space-6) * 2);
+    left: 0;
   }
 }

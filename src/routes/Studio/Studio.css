@@ -26,9 +26,11 @@
   align-items: center;
   gap: var(--space-4);
   padding: var(--space-3) var(--space-6);
-  border-bottom: var(--rule-ink);
+  border-bottom: var(--w-thick) solid var(--hairline);
   background: var(--paper);
   z-index: 10;
+  /* LEGO yellow accent top */
+  border-top: 4px solid var(--accent);
 }
 
 .studio-header-left {
@@ -108,14 +110,14 @@
 .studio-sidebar {
   display: grid;
   grid-template-rows: auto 1fr;
-  border-right: var(--rule-ink);
+  border-right: var(--w-thick) solid var(--hairline);
   overflow: hidden;
 }
 
 .studio-panel-tabs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border-bottom: var(--rule-ink);
+  border-bottom: var(--w-thick) solid var(--hairline);
 }
 
 .studio-panel-tab {
@@ -143,10 +145,10 @@
 }
 
 .studio-panel-tab.is-active {
-  color: var(--ink);
-  background: var(--paper);
-  border-bottom: var(--w-thick) solid var(--ink);
-  margin-bottom: -1px; /* overlap the container border */
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-bottom: var(--w-thick) solid var(--accent);
+  margin-bottom: -2px;
 }
 
 .studio-panel-body {
@@ -168,7 +170,7 @@
 /* ------------------------------------------------------------------- */
 
 .studio-stats-col {
-  border-left: var(--rule-ink);
+  border-left: var(--w-thick) solid var(--hairline);
   overflow-y: auto;
   padding: var(--space-5) var(--space-4);
 }
@@ -239,6 +241,7 @@
   padding: var(--space-3);
   background: var(--paper-2);
   border: var(--rule-hair);
+  border-radius: var(--radius-0);
 }
 
 .pp-selected-chip {

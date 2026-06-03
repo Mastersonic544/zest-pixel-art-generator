@@ -13,11 +13,13 @@
 
 .mp-frame {
   display: block;
-  border: var(--rule-ink);
+  border: var(--w-thick) solid var(--hairline);
+  border-radius: var(--radius-0);
   background: var(--paper-2);
-  /* The canvas is sized in JS with a square aspect. */
+  overflow: hidden;
   width: 100%;
   height: auto;
+  box-shadow: var(--shadow-sm);
 }
 
 .mp-frame canvas {
@@ -49,8 +51,8 @@
 /* ------------------------------------------------------------------- */
 
 .cl {
-  border-top: var(--rule-ink);
-  border-bottom: var(--rule-ink);
+  border-top: var(--rule-hair);
+  border-bottom: var(--rule-hair);
 }
 .cl-row {
   display: grid;
@@ -124,8 +126,8 @@
 .ms-figures {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-top: var(--rule-ink);
-  border-bottom: var(--rule-ink);
+  border-top: var(--rule-hair);
+  border-bottom: var(--rule-hair);
 }
 .ms-figures > div { padding: var(--space-4) var(--space-4); }
 .ms-figures > div + div { border-left: var(--rule-hair); }

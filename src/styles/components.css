@@ -1,6 +1,4 @@
-/* Shared component primitives. Imported globally after global.css.
-   These are the deliberate UI building blocks of the system: buttons,
-   inputs, segmented controls, toggles, and the page masthead. */
+/* Shared component primitives — LEGO design system. */
 
 /* ------------------------------------------------------------------- */
 /* Page chrome                                                         */
@@ -11,25 +9,43 @@
   padding: var(--space-7) 0 var(--space-10);
 }
 
+/* Yellow top brand bar on each page */
+.page::before {
+  content: '';
+  display: block;
+  height: 4px;
+  background: var(--accent);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
 .masthead {
   display: grid;
   grid-template-columns: 1fr auto;
-  align-items: end;
+  align-items: center;
   gap: var(--space-6);
   padding-bottom: var(--space-5);
-  border-bottom: var(--rule-ink);
+  border-bottom: var(--w-thick) solid var(--hairline);
+  margin-bottom: 0;
 }
+
 .masthead-title {
   font-family: var(--font-sans);
-  font-weight: 800;
+  font-weight: 900;
   font-size: var(--t-display-l);
   line-height: var(--lh-display);
   letter-spacing: var(--ls-display);
+  color: var(--ink);
 }
+
 .masthead-title-sub {
   color: var(--ink-3);
-  font-weight: 500;
+  font-weight: 600;
 }
+
 .masthead-meta {
   display: grid;
   grid-template-columns: auto auto;
@@ -64,7 +80,7 @@
 .section-num strong {
   display: block;
   color: var(--ink);
-  font-weight: 500;
+  font-weight: 700;
   font-size: var(--t-body);
   margin-top: var(--space-1);
   text-transform: none;
@@ -79,17 +95,17 @@
   line-height: var(--lh-body);
 }
 
-/* A persistent warning notice. Hairline-framed, no card. */
+/* Warning notice */
 .notice {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  border-top: 1px solid var(--warn);
-  border-bottom: 1px solid var(--warn);
+  border-radius: var(--radius-0);
+  background: var(--warn-faint);
+  border-left: 3px solid var(--warn);
   font-size: var(--t-body-s);
   color: var(--ink);
-  background: var(--warn-faint);
   margin-bottom: var(--space-5);
 }
 .notice-tag {
@@ -100,10 +116,11 @@
   color: var(--warn);
   align-self: start;
   padding-top: 2px;
+  font-weight: 700;
 }
 
 /* ------------------------------------------------------------------- */
-/* Buttons                                                             */
+/* Buttons — LEGO style                                                */
 /* ------------------------------------------------------------------- */
 
 .btn {
@@ -111,80 +128,114 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  height: 2.5rem;
-  padding: 0 var(--space-4);
+  height: 2.75rem;
+  padding: 0 var(--space-5);
   font-family: var(--font-sans);
   font-size: var(--t-body-s);
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.01em;
-  border: var(--rule-ink);
+  border: var(--w-thick) solid var(--ink);
   background: transparent;
   color: var(--ink);
   border-radius: var(--radius-0);
   transition: background var(--dur-fast) var(--ease-out),
               color var(--dur-fast) var(--ease-out),
-              border-color var(--dur-fast) var(--ease-out);
+              border-color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
   cursor: pointer;
   white-space: nowrap;
+  position: relative;
 }
-.btn:hover { background: var(--ink); color: var(--paper); }
-.btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 
-.btn-primary {
+.btn:hover {
   background: var(--ink);
   color: var(--paper);
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Primary: LEGO yellow with black text */
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
   border-color: var(--ink);
 }
 .btn-primary:hover {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--accent-dark);
+  border-color: var(--ink);
   color: var(--accent-ink);
 }
 
 .btn-ghost {
-  border-color: transparent;
+  border-color: var(--hairline);
   background: transparent;
   color: var(--ink-2);
 }
-.btn-ghost:hover { color: var(--ink); background: var(--paper-2); }
+.btn-ghost:hover {
+  color: var(--ink);
+  background: var(--paper-2);
+  border-color: var(--ink-3);
+  transform: none;
+}
 
+/* Accent = same as primary in LEGO system */
 .btn-accent {
   background: var(--accent);
   color: var(--accent-ink);
-  border-color: var(--accent);
+  border-color: var(--ink);
 }
-.btn-accent:hover { filter: brightness(0.92); }
+.btn-accent:hover {
+  background: var(--accent-dark);
+  border-color: var(--ink);
+  color: var(--accent-ink);
+}
 
 .btn-danger {
   border-color: var(--warn);
   color: var(--warn);
+  background: transparent;
 }
-.btn-danger:hover { background: var(--warn); color: var(--paper); border-color: var(--warn); }
+.btn-danger:hover {
+  background: var(--warn);
+  color: var(--paper);
+  border-color: var(--warn);
+}
 
 .btn[disabled],
 .btn-disabled {
-  color: var(--ink-3);
+  color: var(--ink-4);
   border-color: var(--hairline);
   background: transparent;
   cursor: not-allowed;
   pointer-events: none;
+  transform: none;
 }
 
 .btn-tiny {
-  height: 1.75rem;
+  height: 2rem;
   padding: 0 var(--space-3);
   font-size: var(--t-caption);
   letter-spacing: var(--ls-caps);
   text-transform: uppercase;
+  border-radius: var(--radius-0);
 }
 
 .btn-icon {
-  width: 1.75rem;
-  height: 1.75rem;
+  width: 2rem;
+  height: 2rem;
   padding: 0;
   font-family: var(--font-mono);
   font-size: var(--t-body-s);
   line-height: 1;
+  border-radius: var(--radius-0);
 }
 
 /* ------------------------------------------------------------------- */
@@ -194,20 +245,21 @@
 .input {
   display: inline-flex;
   align-items: center;
-  height: 2rem;
-  padding: 0 var(--space-3);
+  height: 2.5rem;
+  padding: 0 var(--space-4);
   font-family: var(--font-sans);
   font-size: var(--t-body-s);
+  font-weight: 500;
   color: var(--ink);
   background: var(--surface);
-  border: var(--rule-hair);
+  border: var(--w-thick) solid var(--hairline);
   border-radius: var(--radius-0);
   width: 100%;
   transition: border-color var(--dur-fast) var(--ease-out),
-              background var(--dur-fast) var(--ease-out);
+              box-shadow var(--dur-fast) var(--ease-out);
 }
 .input:hover { border-color: var(--ink-3); }
-.input:focus { outline: none; border-color: var(--ink); }
+.input:focus { outline: none; border-color: var(--ink); box-shadow: var(--focus-ring); }
 .input:focus-visible { outline: none; box-shadow: var(--focus-ring); border-color: var(--ink); }
 .input.is-invalid { border-color: var(--warn); }
 
@@ -226,25 +278,30 @@
 
 .segmented {
   display: inline-flex;
-  border: var(--rule-ink);
+  border: var(--w-thick) solid var(--ink);
+  border-radius: var(--radius-0);
+  overflow: hidden;
 }
 .segmented button {
-  height: 2rem;
+  height: 2.25rem;
   padding: 0 var(--space-4);
   font-family: var(--font-sans);
   font-size: var(--t-body-s);
-  font-weight: 500;
+  font-weight: 700;
   color: var(--ink-2);
   background: transparent;
   border: 0;
-  border-left: var(--rule-hair);
+  border-left: var(--w-hair) solid var(--hairline);
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease-out),
               color var(--dur-fast) var(--ease-out);
 }
 .segmented button:first-child { border-left: 0; }
 .segmented button:hover { color: var(--ink); background: var(--paper-2); }
-.segmented button.is-active { color: var(--paper); background: var(--ink); }
+.segmented button.is-active {
+  color: var(--accent-ink);
+  background: var(--accent);
+}
 .segmented button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 
 .segmented-mono button {
@@ -272,7 +329,7 @@
 .field-label-title {
   font-size: var(--t-body);
   color: var(--ink);
-  font-weight: 500;
+  font-weight: 700;
 }
 .field-label-help {
   font-size: var(--t-body-s);
@@ -285,13 +342,39 @@
   flex-wrap: wrap;
 }
 
-/* Inline nav row. Used at the bottom of pages for quick route hop. */
+/* Inline nav row */
 .crosslinks {
   display: flex;
   gap: var(--space-5);
   padding: var(--space-5) 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: var(--t-body-s);
+  font-weight: 700;
 }
-.crosslinks a { border-bottom: var(--rule-hair); color: var(--ink-2); }
-.crosslinks a:hover { color: var(--accent); border-color: var(--accent); }
+.crosslinks a { color: var(--ink-2); }
+.crosslinks a:hover { color: var(--lego-blue); }
+
+/* ------------------------------------------------------------------- */
+/* Responsive                                                          */
+/* ------------------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  .section {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .section-num {
+    position: static;
+  }
+
+  .field {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+
+  .masthead {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+}

@@ -35,7 +35,7 @@
 
 .pd-body {
   display: grid;
-  grid-template-columns: 18rem 1fr;
+  grid-template-columns: 20rem 1fr;
   gap: var(--space-8);
   align-items: start;
   padding-top: var(--space-7);

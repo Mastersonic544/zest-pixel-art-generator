@@ -31,7 +31,7 @@
   align-items: end;
   gap: var(--space-6);
   padding-bottom: var(--space-5);
-  border-bottom: var(--rule-ink);
+  border-bottom: var(--w-thick) solid var(--hairline);
 }
 
 .bp-header-title-group {
@@ -139,7 +139,7 @@
 .bp-missing-headline {
   font-family: var(--font-sans);
   font-size: var(--t-h1);
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: var(--ls-h);
   color: var(--ink);
 }
