@@ -196,6 +196,30 @@
   box-shadow: var(--focus-ring);
 }
 
+/* Corner resize handles */
+.np-crop-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--accent);
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  pointer-events: auto;
+  z-index: 2;
+  transition: transform var(--dur-fast) var(--ease-out),
+              background var(--dur-fast) var(--ease-out);
+}
+
+.np-crop-corner:hover {
+  background: var(--accent-dark);
+  transform: scale(1.25);
+}
+
+.np-crop-corner-tl { top: -7px;    left: -7px;    cursor: nwse-resize; }
+.np-crop-corner-tr { top: -7px;    right: -7px;   cursor: nesw-resize; }
+.np-crop-corner-bl { bottom: -7px; left: -7px;    cursor: nesw-resize; }
+.np-crop-corner-br { bottom: -7px; right: -7px;   cursor: nwse-resize; }
+
 .np-crop-controls {
   display: grid;
   gap: var(--space-6);
