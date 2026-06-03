@@ -10,13 +10,13 @@ const firebaseConfig = {
 
 const app = getApps().length ? getApps()[0]! : initializeApp(firebaseConfig);
 
-// ignoreUndefinedProperties: Firestore silently drops undefined fields
-// instead of throwing. Belt-and-suspenders alongside the JSON round-trip
-// in shareStorage.ts.
-try {
-  initializeFirestore(app, { ignoreUndefinedProperties: true });
-} catch {
-  // Already initialized (HMR / module re-evaluation) — existing instance is fine.
-}
-
-export const db = getFirestore(app);
+// Use initializeFirestore's return value directly so ignoreUndefinedProperties
+// is guaranteed on the exported instance. Fall back to getFirestore on HMR
+// re-evaluation (initializeFirestore throws if already initialized).
+export const db = (() => {
+  try {
+    return initializeFirestore(app, { ignoreUndefinedProperties: true });
+  } catch {
+    return getFirestore(app);
+  }
+})();

@@ -25,6 +25,17 @@ export type ShareStorage = {
 /* Firestore + Cloudinary implementation                              */
 /* ------------------------------------------------------------------ */
 
+/** Recursively remove undefined values so Firestore never sees them. */
+function stripUndefined(val: unknown): unknown {
+  if (val === null || typeof val !== "object") return val;
+  if (Array.isArray(val)) return val.map(stripUndefined);
+  return Object.fromEntries(
+    Object.entries(val as Record<string, unknown>)
+      .filter(([, v]) => v !== undefined)
+      .map(([k, v]) => [k, stripUndefined(v)])
+  );
+}
+
 function makeFirestoreStorage(): ShareStorage {
   return {
     mode: "firestore",
@@ -34,11 +45,12 @@ function makeFirestoreStorage(): ShareStorage {
       const { doc, setDoc, serverTimestamp } = await import("firebase/firestore");
 
       // sourceThumb is a base64 data URL — too large for Firestore and not
-      // rendered on the build page (which uses grid + paletteSnapshot only).
-      // JSON.parse/JSON.stringify also strips every other undefined optional
-      // field (Color.legoColorId, Color.legoPartHint, shareId, etc.).
-      const projectDoc = JSON.parse(JSON.stringify(project)) as Record<string, unknown>;
-      delete projectDoc["sourceThumb"];
+      // rendered on the build page. Destructure it out, then recursively
+      // strip any remaining undefined optional fields (legoColorId, etc.)
+      // before writing so Firestore never receives an unsupported undefined.
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { sourceThumb: _omit, ...projectWithoutThumb } = project;
+      const projectDoc = stripUndefined(projectWithoutThumb);
 
       await setDoc(doc(db, "shares", shareId), {
         project: projectDoc,
