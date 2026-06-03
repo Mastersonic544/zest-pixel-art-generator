@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Dark plate -->
+  <rect width="32" height="32" rx="5" fill="#18181A"/>
+  <!-- 4 pixel tiles -->
+  <rect x="3"  y="3"  width="12" height="12" rx="2" fill="#E63946"/>
+  <rect x="17" y="3"  width="12" height="12" rx="2" fill="#FFB700"/>
+  <rect x="3"  y="17" width="12" height="12" rx="2" fill="#06D6A0"/>
+  <rect x="17" y="17" width="12" height="12" rx="2" fill="#118AB2"/>
+  <!-- LEGO-style studs (one per tile) -->
+  <circle cx="9"  cy="9"  r="2.8" fill="none" stroke="rgba(255,255,255,0.30)" stroke-width="1.5"/>
+  <circle cx="23" cy="9"  r="2.8" fill="none" stroke="rgba(255,255,255,0.30)" stroke-width="1.5"/>
+  <circle cx="9"  cy="23" r="2.8" fill="none" stroke="rgba(255,255,255,0.30)" stroke-width="1.5"/>
+  <circle cx="23" cy="23" r="2.8" fill="none" stroke="rgba(255,255,255,0.30)" stroke-width="1.5"/>
+</svg>
