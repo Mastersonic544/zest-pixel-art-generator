@@ -30,6 +30,51 @@
 }
 
 /* ------------------------------------------------------------------- */
+/* Inline rename                                                       */
+/* ------------------------------------------------------------------- */
+
+.pd-rename-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: text;
+  text-align: left;
+}
+
+.pd-rename-btn .masthead-title {
+  margin: 0;
+}
+
+.pd-rename-icon {
+  font-size: var(--t-body);
+  color: var(--ink-4);
+  flex-shrink: 0;
+  transition: color var(--dur-fast) var(--ease-out);
+  line-height: 1;
+}
+
+.pd-rename-btn:hover .pd-rename-icon {
+  color: var(--ink-2);
+}
+
+.pd-rename-input {
+  /* Inherit masthead-title styles but render as input */
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: 2px solid var(--accent);
+  border-radius: 0;
+  padding: 0 0 2px 0;
+  outline: none;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  /* font-size / weight / letter-spacing come from .masthead-title */
+}
+
+/* ------------------------------------------------------------------- */
 /* Body layout                                                         */
 /* ------------------------------------------------------------------- */
 

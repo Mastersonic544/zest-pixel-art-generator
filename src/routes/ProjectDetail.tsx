@@ -9,7 +9,7 @@
     Share button that expands SharePanel inline.
 */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useProjects } from "@/store/projects";
 import { MosaicPreview, MosaicStats, ImageViewModal } from "@/components/mosaic";
@@ -29,8 +29,30 @@ export default function ProjectDetail() {
   const [mode, setMode] = useState<PreviewMode>("colored");
   const [shareOpen, setShareOpen] = useState(false);
   const [viewerOpen, setViewerOpen] = useState(false);
-  // Show the shared-project edit warning when Studio is clicked on a shared project.
   const [showEditWarn, setShowEditWarn] = useState(false);
+
+  // Inline rename
+  const [renaming, setRenaming] = useState(false);
+  const [draftName, setDraftName] = useState("");
+  const renameInputRef = useRef<HTMLInputElement>(null);
+
+  const startRename = useCallback(() => {
+    if (!project) return;
+    setDraftName(project.name);
+    setRenaming(true);
+    setTimeout(() => renameInputRef.current?.select(), 0);
+  }, [project]);
+
+  const commitRename = useCallback(() => {
+    if (!project) return;
+    const trimmed = draftName.trim();
+    if (trimmed && trimmed !== project.name) {
+      saveProject({ ...project, name: trimmed, updatedAt: new Date().toISOString() });
+    }
+    setRenaming(false);
+  }, [project, draftName, saveProject]);
+
+  const cancelRename = useCallback(() => setRenaming(false), []);
 
   const handleShared = useCallback(
     (updated: Project) => {
@@ -75,7 +97,31 @@ export default function ProjectDetail() {
         <header className="masthead">
           <div className="pd-masthead-title-group">
             <Link to="/" className="pd-back">Dashboard</Link>
-            <h1 className="masthead-title">{project.name}</h1>
+            {renaming ? (
+              <input
+                ref={renameInputRef}
+                className="pd-rename-input masthead-title"
+                value={draftName}
+                onChange={(e) => setDraftName(e.target.value)}
+                onBlur={commitRename}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") commitRename();
+                  if (e.key === "Escape") cancelRename();
+                }}
+                maxLength={80}
+                aria-label="Project name"
+              />
+            ) : (
+              <button
+                className="pd-rename-btn"
+                onClick={startRename}
+                title="Click to rename"
+                aria-label={`Rename project: ${project.name}`}
+              >
+                <h1 className="masthead-title">{project.name}</h1>
+                <span className="pd-rename-icon" aria-hidden="true">✎</span>
+              </button>
+            )}
           </div>
           <div className="masthead-meta">
             <span>Size</span>
