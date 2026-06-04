@@ -225,17 +225,29 @@
   background: var(--paper-2);
 }
 
-.db-thumb-img {
-  display: block;
+/* Mosaic thumbnail: strip the label bar, force canvas to fill the box */
+.db-thumb-mosaic {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  image-rendering: pixelated;
+  overflow: hidden;
 }
 
-.db-thumb-fallback {
-  width: 100%;
-  height: 100%;
+.db-thumb-mosaic .mp {
+  max-width: none !important;
+}
+
+.db-thumb-mosaic .mp-frame {
+  width: 3rem !important;
+  height: 3rem !important;
+}
+
+.db-thumb-mosaic .mp-frame canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.db-thumb-mosaic .mp-meta {
+  display: none;
 }
 
 /* Name + date column */

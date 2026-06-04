@@ -7,6 +7,7 @@
 import { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useProjects } from "@/store/projects";
+import { MosaicPreview } from "@/components/mosaic";
 import type { Project } from "@/lib/types";
 import "./Dashboard.css";
 
@@ -63,32 +64,10 @@ function computeKpis(projects: Project[]): KpiData {
 /* ------------------------------------------------------------------ */
 
 function ProjectThumb({ project }: { project: Project }) {
-  if (project.sourceThumb) {
-    return (
-      <img
-        src={project.sourceThumb}
-        alt=""
-        className="db-thumb-img"
-        aria-hidden="true"
-      />
-    );
-  }
-  // Fallback: tonal block showing the dominant color in the grid,
-  // derived from paletteSnapshot without needing a canvas render.
-  const counts = new Map<number, number>();
-  for (const id of project.grid) counts.set(id, (counts.get(id) ?? 0) + 1);
-  let topId = project.grid[0] ?? 1;
-  let topCount = 0;
-  for (const [id, n] of counts) {
-    if (n > topCount) { topCount = n; topId = id; }
-  }
-  const color = project.paletteSnapshot.colors.find((c) => c.id === topId);
   return (
-    <div
-      className="db-thumb-fallback"
-      style={{ background: color?.hex ?? "var(--paper-2)" }}
-      aria-hidden="true"
-    />
+    <div className="db-thumb-mosaic" aria-hidden="true">
+      <MosaicPreview project={project} mode="colored" size={48} />
+    </div>
   );
 }
 
