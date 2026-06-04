@@ -98,13 +98,14 @@ function ProjectThumb({ project }: { project: Project }) {
 
 export default function Dashboard() {
   const projects = useProjects((s) => s.projects);
+  const isLoading = useProjects((s) => s.isLoading);
   const navigate = useNavigate();
 
   const kpis = useMemo(() => computeKpis(projects), [projects]);
 
   // Newest first.
   const sorted = useMemo(
-    () => [...projects].sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
+    () => [...projects].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)),
     [projects]
   );
 
@@ -194,7 +195,12 @@ export default function Dashboard() {
         </div>
 
         {/* Project list */}
-        {sorted.length === 0 ? (
+        {isLoading ? (
+          <div className="db-loading" aria-live="polite" aria-label="Loading projects">
+            <div className="db-loading-spinner" aria-hidden="true" />
+            <span className="db-loading-text">Loading projects…</span>
+          </div>
+        ) : sorted.length === 0 ? (
           <EmptyState />
         ) : (
           <section aria-label="Projects">

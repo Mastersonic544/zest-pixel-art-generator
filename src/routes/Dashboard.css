@@ -293,6 +293,35 @@
 }
 
 /* ------------------------------------------------------------------- */
+/* Loading state                                                       */
+/* ------------------------------------------------------------------- */
+
+.db-loading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-8) 0;
+}
+
+.db-loading-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--hairline);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: db-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes db-spin { to { transform: rotate(360deg); } }
+
+.db-loading-text {
+  font-size: var(--t-body-s);
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+/* ------------------------------------------------------------------- */
 /* Empty state                                                         */
 /* ------------------------------------------------------------------- */
 
