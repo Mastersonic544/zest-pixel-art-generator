@@ -26,7 +26,10 @@ type UnsubFn = () => void;
  * Calls onUpdate immediately with the cached snapshot, then on every change.
  * Returns an unsubscribe function.
  */
-export function subscribeToProjects(onUpdate: (projects: Project[]) => void): UnsubFn {
+export function subscribeToProjects(
+  onUpdate: (projects: Project[]) => void,
+  onError?: (err: Error) => void
+): UnsubFn {
   let unsub: UnsubFn = () => {};
 
   Promise.all([import("./firebase"), import("firebase/firestore")]).then(
@@ -38,7 +41,10 @@ export function subscribeToProjects(onUpdate: (projects: Project[]) => void): Un
           const projects = snap.docs.map((d) => d.data() as Project);
           onUpdate(projects);
         },
-        (err) => console.error("[projectsStorage] onSnapshot error:", err)
+        (err) => {
+          console.error("[projectsStorage] onSnapshot error:", err);
+          onError?.(err);
+        }
       );
     }
   );

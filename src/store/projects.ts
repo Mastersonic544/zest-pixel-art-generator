@@ -52,7 +52,10 @@ export const useProjects = create<ProjectsState>()((set, get) => {
     // Start the real-time Firestore subscription. Dynamic import so the
     // Firebase SDK is only loaded when actually needed.
     import("@/lib/projectsStorage").then(({ subscribeToProjects }) => {
-      subscribeToProjects((projects) => set({ projects, isLoading: false }));
+      subscribeToProjects(
+        (projects) => set({ projects, isLoading: false }),
+        () => set({ isLoading: false }) // stop spinner even on permission error
+      );
     });
   } else {
     // Synchronously hydrate from localStorage
